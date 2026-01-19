@@ -9,48 +9,6 @@
       background-color: black;
       overflow: hidden;
       font-family: Arial, sans-serif;
-      color: cyan;
-    }
-
-    /* Parallax starfield background */
-    #starfield {
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5) 0, transparent 40%),
-        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.4) 0, transparent 40%),
-        radial-gradient(circle at 50% 80%, rgba(255,255,255,0.3) 0, transparent 40%);
-      background-color: black;
-      z-index: 0;
-      pointer-events: none;
-      animation: starfloat 40s linear infinite;
-    }
-
-    @keyframes starfloat {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(-50px, -100px, 0); }
-    }
-
-    /* CRT + scanlines overlay */
-    #crt {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 30;
-      mix-blend-mode: screen;
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0.35),
-          rgba(0, 0, 0, 0.35) 2px,
-          rgba(0, 0, 0, 0.1) 3px
-        );
-      animation: crt-flicker 0.12s infinite alternate;
-    }
-
-    @keyframes crt-flicker {
-      from { opacity: 0.9; }
-      to   { opacity: 1; }
     }
 
     #title-container {
@@ -58,9 +16,6 @@
       width: 100vw;
       height: 100vh;
       z-index: 5;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .layer {
@@ -77,44 +32,23 @@
       opacity: 1;
     }
 
-    /* PRESS START text/sprite + blinking cursor */
-    #start-wrapper {
+    /* Sprite-based PRESS START */
+    #press-start {
       position: absolute;
       bottom: 60px;
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      width: 128px; /* one frame width */
+      height: 32px; /* frame height */
+      background: url('assets/ui/press_start_sheet.png') no-repeat;
+      animation: blink 1s steps(5) infinite;
       z-index: 10;
       cursor: pointer;
     }
 
-    #start-text {
-      font-size: 24px;
-      letter-spacing: 2px;
-      text-shadow: 0 0 8px cyan;
-      animation: pulse 2s infinite;
-    }
-
-    #start-cursor {
-      width: 14px;
-      height: 24px;
-      background: cyan;
-      box-shadow: 0 0 6px cyan;
-      animation: blink 0.6s steps(1) infinite;
-    }
-
-    @keyframes pulse {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.03); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-
     @keyframes blink {
-      0% { opacity: 1; }
-      50% { opacity: 0; }
-      100% { opacity: 1; }
+      from { background-position: 0 0; }
+      to   { background-position: -640px 0; } /* 128px × 5 frames */
     }
 
     /* Fade-to-black overlay */
@@ -145,28 +79,19 @@
   </style>
 </head>
 <body>
-  <div id="starfield"></div>
-
   <div id="title-container">
     <img id="layerA" class="layer visible" />
     <img id="layerB" class="layer" />
 
-    <div id="start-wrapper" onclick="startGame()">
-      <div id="start-text">PRESS START</div>
-      <div id="start-cursor"></div>
-    </div>
-
+    <div id="press-start" onclick="startGame()"></div>
     <button id="audio-toggle" onclick="toggleAudio()">MUTE</button>
-
     <div id="fadeout"></div>
   </div>
-
-  <div id="crt"></div>
 
   <audio id="intro-audio" src="assets/audio/intro.ogg" preload="auto"></audio>
 
   <script>
-    /* --- IMAGE SEQUENCE: 3 → 4 → 5 → 4 --- */
+    /* --- IMAGE SEQUENCE --- */
     const sequence = [
       "assets/title/title3.png",
       "assets/title/title4.png",
