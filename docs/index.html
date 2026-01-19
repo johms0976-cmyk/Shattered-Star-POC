@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Shattered-Star-POC</title>
+  <title>Shattered Star</title>
   <style>
     body {
       margin: 0;
       background-color: black;
       overflow: hidden;
-      font-family: 'Orbitron', sans-serif;
+      font-family: Arial, sans-serif;
     }
 
     #title-container {
@@ -55,9 +55,9 @@
 </head>
 <body>
   <div id="title-container">
-    <img src="docs/assets/title/Title3.jpg" class="title-image active" />
-    <img src="docs/assets/title/Title4.jpg" class="title-image" />
-    <img src="docs/assets/title/Title5.jpg" class="title-image" />
+    <img src="assets/title/title3.png" class="title-image active" />
+    <img src="assets/title/title4.png" class="title-image" />
+    <img src="assets/title/title5.png" class="title-image" />
     <button id="start-button" onclick="startGame()">PRESS START</button>
   </div>
 
@@ -69,10 +69,10 @@
       images[current].classList.remove('active');
       current = (current + 1) % images.length;
       images[current].classList.add('active');
-    }, 4000); // Change image every 4 seconds
+    }, 4000);
 
     function startGame() {
-      window.location.href = "https://yourgame.github.io/prototype"; // Replace with your actual link
+      window.location.href = "https://johms0976-cmyk.github.io/Shattered-Star-POC/game"; 
     }
   </script>
 </body>
