@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shattered-Star-POC</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: black;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: cyan;
+    }
+
+    /* Parallax starfield background */
+    #starfield {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5) 0, transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.4) 0, transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(255,255,255,0.3) 0, transparent 40%);
+      background-color: black;
+      z-index: 0;
+      pointer-events: none;
+      animation: starfloat 40s linear infinite;
+    }
+
+    @keyframes starfloat {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50px, -100px, 0); }
+    }
+
+    /* CRT + scanlines overlay */
+    #crt {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 30;
+      mix-blend-mode: screen;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.35),
+          rgba(0, 0, 0, 0.35) 2px,
+          rgba(0, 0, 0, 0.1) 3px
+        );
+      animation: crt-flicker 0.12s infinite alternate;
+    }
+
+    @keyframes crt-flicker {
+      from { opacity: 0.9; }
+      to   { opacity: 1; }
+    }
+
+    #title-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      filter: contrast(1.1) saturate(1.1);
+    }
+
+    .visible {
+      opacity: 1;
+    }
+
+    /* PRESS START text/sprite + blinking cursor */
+    #start-wrapper {
+      position: absolute;
+      bottom: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    #start-text {
+      font-size: 24px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 8px cyan;
+      animation: pulse 2s infinite;
+    }
+
+    #start-cursor {
+      width: 14px;
+      height: 24px;
+      background: cyan;
+      box-shadow: 0 0 6px cyan;
+      animation: blink 0.6s steps(1) infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.03); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* Fade-to-black overlay */
+    #fadeout {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: black;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 2s ease-in-out;
+      z-index: 20;
+    }
+
+    /* Audio mute button */
+    #audio-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: cyan;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid cyan;
+      cursor: pointer;
+      z-index: 15;
+    }
+  </style>
+</head>
+<body>
+  <div id="starfield"></div>
+
+  <div id="title-container">
+    <img id="layerA" class="layer visible" />
+    <img id="layerB" class="layer" />
+
+    <div id="start-wrapper" onclick="startGame()">
+      <div id="start-text">PRESS START</div>
+      <div id="start-cursor"></div>
+    </div>
+
+    <button id="audio-toggle" onclick="toggleAudio()">MUTE</button>
+
+    <div id="fadeout"></div>
+  </div>
+
+  <div id="crt"></div>
+
+  <audio id="intro-audio" src="assets/audio/intro.ogg" preload="auto"></audio>
+
+  <script>
+    /* --- IMAGE SEQUENCE: 3 → 4 → 5 → 4 --- */
+    const sequence = [
+      "assets/title/title3.png",
+      "assets/title/title4.png",
+      "assets/title/title5.png",
+      "assets/title/title4.png"
+    ];
+
+    let index = 0;
+    let showingA = true;
+
+    const layerA = document.getElementById("layerA");
+    const layerB = document.getElementById("layerB");
+
+    layerA.src = sequence[0];
+
+    function crossfade() {
+      index = (index + 1) % sequence.length;
+
+      if (showingA) {
+        layerB.src = sequence[index];
+        layerB.classList.add("visible");
+        layerA.classList.remove("visible");
+      } else {
+        layerA.src = sequence[index];
+        layerA.classList.add("visible");
+        layerB.classList.remove("visible");
+      }
+
+      showingA = !showingA;
+    }
+
+    setInterval(crossfade, 4000);
+
+    /* --- COSMIC GLITCH EFFECT --- */
+    function glitch() {
+      const layer = showingA ? layerA : layerB;
+      layer.style.filter = "contrast(1.4) saturate(1.4) hue-rotate(35deg)";
+      setTimeout(() => {
+        layer.style.filter = "contrast(1.1) saturate(1.1)";
+      }, 120);
+    }
+
+    setInterval(() => {
+      if (Math.random() < 0.12) glitch();
+    }, 500);
+
+    /* --- AUDIO INTRO + MUTE TOGGLE --- */
+    const introAudio = document.getElementById("intro-audio");
+    const audioToggle = document.getElementById("audio-toggle");
+    let audioMuted = false;
+    let audioStarted = false;
+
+    function ensureAudioStart() {
+      if (!audioStarted) {
+        introAudio.volume = 0.8;
+        introAudio.loop = true;
+        introAudio.play().catch(() => {});
+        audioStarted = true;
+      }
+    }
+
+    document.addEventListener("click", ensureAudioStart, { once: true });
+    document.addEventListener("keydown", ensureAudioStart, { once: true });
+
+    function toggleAudio() {
+      audioMuted = !audioMuted;
+      introAudio.muted = audioMuted;
+      audioToggle.textContent = audioMuted ? "UNMUTE" : "MUTE";
+    }
+
+    /* --- PRESS ENTER TO START --- */
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") startGame();
+    });
+
+    /* --- FADE TO BLACK + REDIRECT --- */
+    let starting = false;
+    function startGame() {
+      if (starting) return;
+      starting = true;
+
+      const fade = document.getElementById("fadeout");
+      fade.style.opacity = 1;
+
+      setTimeout(() => {
+        window.location.href = "https://johms0976-cmyk.github.io/Shattered-Star-POC/game";
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
