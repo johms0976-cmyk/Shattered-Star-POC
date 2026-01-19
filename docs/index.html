@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shattered-Star-POC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <style>
+    :root {
+      --min-width: 360px;
+    }
+
+    body {
+      margin: 0;
+      background-color: black;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      color: cyan;
+      min-width: var(--min-width);
+    }
+
+    /* ============================================================
+       BACKGROUND LAYERS — BASE
+       ============================================================ */
+
+    #starfield, #nebula, #vhs-noise, #static-burst, #crt {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    #starfield {
+      z-index: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.5) 0, transparent 40%),
+        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.4) 0, transparent 40%),
+        radial-gradient(circle at 50% 80%, rgba(255,255,255,0.3) 0, transparent 40%);
+      animation: starfloat 40s linear infinite;
+    }
+
+    @keyframes starfloat {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50px, -100px, 0); }
+    }
+
+    #nebula {
+      z-index: 1;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(80,0,120,0.25), transparent 60%),
+        radial-gradient(circle at 70% 60%, rgba(0,120,255,0.2), transparent 60%),
+        radial-gradient(circle at 50% 80%, rgba(0,255,180,0.15), transparent 60%);
+      filter: blur(40px);
+      animation: nebulafloat 120s ease-in-out infinite alternate;
+    }
+
+    @keyframes nebulafloat {
+      0% { transform: translate3d(0,0,0) scale(1); }
+      100% { transform: translate3d(-80px,-40px,0) scale(1.2); }
+    }
+
+    #vhs-noise {
+      z-index: 25;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.03) 0px,
+          rgba(255,255,255,0.03) 1px,
+          rgba(0,0,0,0.03) 2px
+        );
+      mix-blend-mode: overlay;
+      opacity: 0.25;
+      animation: vhs-roll 6s linear infinite;
+    }
+
+    @keyframes vhs-roll {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(100%); }
+    }
+
+    #static-burst {
+      z-index: 26;
+      background: repeating-radial-gradient(circle, white 0 1px, black 1px 2px);
+      opacity: 0;
+      mix-blend-mode: screen;
+      transition: opacity 0.1s linear;
+    }
+
+    #crt {
+      z-index: 30;
+      mix-blend-mode: screen;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.35),
+          rgba(0, 0, 0, 0.35) 2px,
+          rgba(0, 0, 0, 0.1) 3px
+        );
+      animation: crt-flicker 0.12s infinite alternate;
+      transform: perspective(600px) scale(1.02)
+                 skewX(0.5deg) skewY(0.5deg);
+    }
+
+    @keyframes crt-flicker {
+      from { opacity: 0.9; }
+      to   { opacity: 1; }
+    }
+
+    /* ============================================================
+       TITLE CONTAINER — FOREGROUND
+       ============================================================ */
+
+    #title-container {
+      position: relative;
+      width: 100vw;
+      height: 100dvh;
+      z-index: 50;
+      overflow: hidden;
+    }
+
+    .layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+      filter: contrast(1.1) saturate(1.1);
+      mix-blend-mode: screen;
+    }
+
+    .visible {
+      opacity: 1;
+    }
+
+    /* LOGO SHADER */
+    #logo-shader {
+      position: absolute;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 20%;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(0,255,255,0.25), transparent 60%),
+        radial-gradient(circle at 80% 100%, rgba(255,0,255,0.2), transparent 60%);
+      mix-blend-mode: color-dodge;
+      pointer-events: none;
+      animation: logo-warp 6s ease-in-out infinite alternate;
+      z-index: 60;
+    }
+
+    @keyframes logo-warp {
+      0% { transform: translateX(-50%) scale(1); opacity: 0.6; }
+      100% { transform: translateX(-50%) scale(1.05); opacity: 0.9; }
+    }
+
+    /* MENU + CURSOR */
+    #menu {
+      position: absolute;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 70;
+      text-align: left;
+    }
+
+    .menu-item {
+      font-size: 18px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 6px cyan;
+      opacity: 0.7;
+    }
+
+    .menu-item.active {
+      opacity: 1;
+      color: #ffffff;
+      text-shadow: 0 0 10px cyan;
+    }
+
+    #cursor {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: cyan;
+      box-shadow: 0 0 6px cyan;
+      animation: cursor-bob 0.6s ease-in-out infinite alternate;
+      z-index: 71;
+    }
+
+    @keyframes cursor-bob {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(-4px); opacity: 0.6; }
+    }
+
+    /* PRESS START SPRITE */
+    #press-start {
+      position: absolute;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 128px;
+      height: 32px;
+      background: url('assets/ui/press_start_sheet.png') no-repeat;
+      animation: blink 1s steps(5) infinite;
+      z-index: 70;
+      cursor: pointer;
+    }
+
+    @keyframes blink {
+      from { background-position: 0 0; }
+      to   { background-position: -640px 0; }
+    }
+
+    /* SAVE SLOTS */
+    #save-slots {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 260px;
+      padding: 8px 12px;
+      border: 1px solid rgba(0,255,255,0.4);
+      background: rgba(0,0,0,0.7);
+      font-size: 12px;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 80;
+    }
+
+    .slot {
+      display: flex;
+      justify-content: space-between;
+      opacity: 0.8;
+    }
+
+    /* FADEOUT */
+    #fadeout {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: black;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 2s ease-in-out;
+      z-index: 200;
+    }
+
+    /* AUDIO TOGGLE */
+    #audio-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: cyan;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid cyan;
+      cursor: pointer;
+      z-index: 150;
+    }
+
+    /* ============================================================
+       MOBILE / SMALL SCREEN ADJUSTMENTS (HYBRID MODE)
+       ============================================================ */
+
+    @media (max-width: 768px) {
+      #title-container {
+        height: 100dvh;
+      }
+
+      .layer {
+        object-fit: contain;
+        transform: translateY(-5%);
+      }
+
+      #logo-shader {
+        top: 6%;
+        width: 70%;
+        height: 18%;
+        opacity: 0.7;
+      }
+
+      #menu {
+        bottom: 150px;
+      }
+
+      .menu-item {
+        font-size: 16px;
+        letter-spacing: 1px;
+      }
+
+      #cursor {
+        width: 12px;
+        height: 12px;
+        box-shadow: 0 0 4px cyan;
+      }
+
+      #press-start {
+        bottom: 90px;
+        transform: translateX(-50%) scale(0.85);
+      }
+
+      #save-slots {
+        bottom: 40px;
+        width: 240px;
+        font-size: 11px;
+      }
+
+      #nebula {
+        filter: blur(25px);
+        opacity: 0.8;
+      }
+
+      #vhs-noise {
+        opacity: 0.18;
+      }
+
+      #static-burst {
+        opacity: 0;
+      }
+
+      #crt {
+        animation: crt-flicker 0.2s infinite alternate;
+        transform: scale(1.01);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BACKGROUND LAYERS -->
+  <div id="starfield"></div>
+  <div id="nebula"></div>
+  <div id="vhs-noise"></div>
+  <div id="static-burst"></div>
+
+  <!-- FOREGROUND -->
+  <div id="title-container">
+    <img id="layerA" class="layer visible" />
+    <img id="layerB" class="layer" />
+
+    <div id="logo-shader"></div>
+
+    <div id="menu">
+      <div class="menu-item active" data-action="new">NEW GAME</div>
+      <div class="menu-item" data-action="continue">CONTINUE</div>
+      <div class="menu-item" data-action="options">OPTIONS</div>
+      <div class="menu-item" data-action="quit">QUIT</div>
+    </div>
+
+    <div id="cursor"></div>
+    <div id="press-start"></div>
+
+    <div id="save-slots">
+      <div class="slot"><span>SLOT 1</span><span>EMPTY</span></div>
+      <div class="slot"><span>SLOT 2</span><span>EMPTY</span></div>
+      <div class="slot"><span>SLOT 3</span><span>EMPTY</span></div>
+    </div>
+
+    <button id="audio-toggle">MUTE</button>
+    <div id="fadeout"></div>
+  </div>
+
+  <div id="crt"></div>
+
+  <audio id="intro-audio" src="assets/audio/intro.ogg" preload="auto"></audio>
+
+  <script>
+    /* IMAGE CROSSFADE */
+    const sequence = [
+      "assets/title/title3.png",
+      "assets/title/title4.png",
+      "assets/title/title5.png",
+      "assets/title/title4.png"
+    ];
+
+    let index = 0;
+    let showingA = true;
+
+    const layerA = document.getElementById("layerA");
+    const layerB = document.getElementById("layerB");
+
+    layerA.src = sequence[0];
+
+    function crossfade() {
+      index = (index + 1) % sequence.length;
+      if (showingA) {
+        layerB.src = sequence[index];
+        layerB.classList.add("visible");
+        layerA.classList.remove("visible");
+      } else {
+        layerA.src = sequence[index];
+        layerA.classList.add("visible");
+        layerB.classList.remove("visible");
+      }
+      showingA = !showingA;
+    }
+
+    setInterval(crossfade, 4000);
+
+    /* GLITCH */
+    function glitch() {
+      const layer = showingA ? layerA : layerB;
+      layer.style.filter = "contrast(1.4) saturate(1.4) hue-rotate(35deg)";
+      setTimeout(() => {
+        layer.style.filter = "contrast(1.1) saturate(1.1)";
+      }, 120);
+    }
+
+    setInterval(() => {
+      if (Math.random() < 0.12) glitch();
+    }, 500);
+
+    /* STATIC BURSTS */
+    const staticLayer = document.getElementById("static-burst");
+
+    setInterval(() => {
+      if (Math.random() < 0.08) {
+        staticLayer.style.opacity = 0.4;
+        setTimeout(() => staticLayer.style.opacity = 0, 80);
+      }
+    }, 300);
+
+    /* AUDIO */
+    const introAudio = document.getElementById("intro-audio");
+    const audioToggle = document.getElementById("audio-toggle");
+    let audioMuted = false;
+    let audioStarted = false;
+
+    function ensureAudioStart() {
+      if (!audioStarted) {
+        introAudio.volume = 0.8;
+        introAudio.loop = true;
+        introAudio.play().catch(() => {});
+        audioStarted = true;
+      }
+    }
+
+    document.addEventListener("click", ensureAudioStart, { once: true });
+    document.addEventListener("keydown", ensureAudioStart, { once: true });
+
+    audioToggle.onclick = () => {
+      audioMuted = !audioMuted;
+      introAudio.muted = audioMuted;
+      audioToggle.textContent = audioMuted ? "UNMUTE" : "MUTE";
+    };
+
+    /* MENU + KEYBOARD NAV */
+    const menuItems = Array.from(document.querySelectorAll(".menu-item"));
+    const cursor = document.getElementById("cursor");
+    const saveSlots = document.getElementById("save-slots");
+    let menuIndex = 0;
+
+    function updateMenuSelection() {
+      menuItems.forEach((item, i) => {
+        item.classList.toggle("active", i === menuIndex);
+      });
+
+      const activeItem = menuItems[menuIndex];
+      const rect = activeItem.getBoundingClientRect();
+      const containerRect = document.getElementById("title-container").getBoundingClientRect();
+      const offsetY = rect.top - containerRect.top;
+
+      cursor.style.left = (containerRect.width / 2 - 110) + "px";
+      cursor.style.bottom = (window.innerHeight - offsetY - 24) + "px";
+    }
+
+    function activateMenuItem() {
+      const action = menuItems[menuIndex].dataset.action;
+
+      if (action === "new") {
+        startGame();
+      } else if (action === "continue") {
+        saveSlots.style.display = "flex";
+      } else if (action === "options") {
+        alert("OPTIONS (placeholder)");
+      } else if (action === "quit") {
+        alert("QUIT (placeholder)");
+      }
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowDown") {
+        menuIndex = (menuIndex + 1) % menuItems.length;
+        updateMenuSelection();
+      } else if (e.key === "ArrowUp") {
+        menuIndex = (menuIndex - 1 + menuItems.length) % menuItems.length;
+        updateMenuSelection();
+      } else if (e.key === "Enter") {
+        activateMenuItem();
+      } else if (e.key === "Escape") {
+        saveSlots.style.display = "none";
+      }
+    });
+
+    updateMenuSelection();
+
+    /* FADE TO BLACK + START */
+    let starting = false;
+
+    function startGame() {
+      if (starting) return;
+      starting = true;
+
+      const fade = document.getElementById("fadeout");
+      fade.style.opacity = 1;
+
+      setTimeout(() => {
+        window.location.href = "https://johms0976-cmyk.github.io/Shattered-Star-POC/game";
+      }, 2000);
+    }
+
+    // Also start game on clicking PRESS START
+    document.getElementById("press-start").onclick = startGame;
+  </script>
+</body>
+</html>
