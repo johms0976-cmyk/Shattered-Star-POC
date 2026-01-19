@@ -2,30 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Shattered Star</title>
+  <title>Shattered-Star-POC</title>
   <style>
     body {
       margin: 0;
       background-color: black;
       overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
     }
-    #title-screen {
+
+    #title-container {
+      position: relative;
       width: 100vw;
       height: 100vh;
-      background-size: cover;
-      background-position: center;
-      animation: cycle 9s infinite;
     }
-    @keyframes cycle {
-      0%   { background-image: url('assets/title/title3.jpg'); }
-      25%  { background-image: url('assets/title/title4.jpg'); }
-      50%  { background-image: url('assets/title/title5.jpg'); }
-      75%  { background-image: url('assets/title/title4.jpg'); }   
-     100%  { background-image: url('assets/title/title3.jpg'); }
+
+    .title-image {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+    }
+
+    .active {
+      opacity: 1;
+      z-index: 1;
+    }
+
+    #start-button {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      font-size: 24px;
+      color: cyan;
+      background: transparent;
+      border: 2px solid cyan;
+      cursor: pointer;
+      z-index: 2;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
     }
   </style>
 </head>
 <body>
-  <div id="title-screen"></div>
+  <div id="title-container">
+    <img src="assets/title/title3.jpg" class="title-image active" />
+    <img src="assets/title/title4.jpg" class="title-image" />
+    <img src="assets/title/title5.jpg" class="title-image" />
+    <button id="start-button" onclick="startGame()">PRESS START</button>
+  </div>
+
+  <script>
+    const images = document.querySelectorAll('.title-image');
+    let current = 0;
+
+    setInterval(() => {
+      images[current].classList.remove('active');
+      current = (current + 1) % images.length;
+      images[current].classList.add('active');
+    }, 4000); // Change image every 4 seconds
+
+    function startGame() {
+      window.location.href = "https://yourgame.github.io/prototype"; // Replace with your actual link
+    }
+  </script>
 </body>
 </html>
+
