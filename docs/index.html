@@ -99,13 +99,19 @@
 
 <!-- TITLE SCREEN -->
 <div id="title-screen" class="screen active">
-  <img id="title-image" class="title-frame" src="assets/title/title1.png">
+  <img id="title-image" class="title-frame" src="assets/screens/title/title1.png">
   <div class="press-enter">PRESS ENTER</div>
+</div>
+
+<!-- NEW GAME SCREEN -->
+<div id="start-screen" class="screen">
+  <img src="assets/screens/newgame/newgame1.png" class="title-frame">
+    <div class="press-enter">BEGIN</div>
 </div>
 
 <!-- START MENU SCREEN -->
 <div id="start-screen" class="screen">
-  <img src="assets/start/startscreen1.png" class="title-frame">
+  <img src="assets/screens/start/startscreen1.png" class="title-frame">
   <div class="menu">
     <div class="menu-item">NEW GAME</div>
     <div class="menu-item">CONTINUE</div>
@@ -186,8 +192,23 @@ window.addEventListener("keydown", (e) => {
 window.addEventListener("click", () => {
   goToStartScreen();
 });
+
+function goToNewGameScreen() {
+  const glitch = document.getElementById("glitch");
+
+  glitch.style.animation = "glitchFlash 0.35s linear";
+
+  setTimeout(() => {
+    glitch.style.animation = "none";
+    document.getElementById("menu-screen").classList.remove("active");
+    document.getElementById("newgame-screen").classList.add("active");
+  }, 350);
+}
+
+document.getElementById("new-game").addEventListener("click", goToNewGameScreen);
+  
 </script>
 
 </body>
 </html>
-
+k
