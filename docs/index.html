@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Shattered-Star-POC</title>
+
   <style>
     html, body {
       margin: 0;
@@ -95,13 +96,13 @@
 
 <!-- TITLE SCREEN -->
 <div id="title-screen" class="screen active">
-  <img id="title-image" class="title-frame" src="assets/screens/title/title1.png">
+  <img id="title-image" class="title-frame" src="docs/assets/screens/title/title1.png">
   <div class="press-enter">PRESS ENTER</div>
 </div>
 
 <!-- MENU SCREEN -->
 <div id="menu-screen" class="screen">
-  <img src="assets/screens/start/startscreen1.png" class="title-frame">
+  <img src="docs/assets/screens/start/startscreen1.png" class="title-frame">
   <div class="menu">
     <div class="menu-item" id="new-game">NEW GAME</div>
     <div class="menu-item">CONTINUE</div>
@@ -111,7 +112,7 @@
 
 <!-- NEW GAME SCREEN -->
 <div id="newgame-screen" class="screen">
-  <img src="assets/screens/new-game/newgame1.png" class="title-frame">
+  <img src="docs/assets/screens/new-game/newgame1.png" class="title-frame">
   <div class="press-enter">BEGIN</div>
 </div>
 
@@ -119,21 +120,22 @@
 <div id="glitch" class="glitch-flash"></div>
 
 <!-- AUDIO -->
-<audio id="intro-audio" src="assets/audio/intro.ogg" preload="auto"></audio>
+<audio id="intro-audio" src="docs/assets/audio/intro.ogg" preload="auto"></audio>
 
 <script>
-/* ------------------------------
+/* ----------------------------------
    TITLE SCREEN ANIMATION LOOP
------------------------------- */
+---------------------------------- */
+
 const frames = [
-  "assets/title/title1.png",
-  "assets/title/title2.png",
-  "assets/title/title3.png",
-  "assets/title/title4.png",
-  "assets/title/title5.png",
-  "assets/title/title4.png",
-  "assets/title/title3.png",
-  "assets/title/title2.png"
+  "docs/assets/screens/title/title1.png",
+  "docs/assets/screens/title/title2.png",
+  "docs/assets/screens/title/title3.png",
+  "docs/assets/screens/title/title4.png",
+  "docs/assets/screens/title/title5.png",
+  "docs/assets/screens/title/title4.png",
+  "docs/assets/screens/title/title3.png",
+  "docs/assets/screens/title/title2.png"
 ];
 
 let frameIndex = 0;
@@ -146,9 +148,10 @@ function animateTitle() {
 
 setInterval(animateTitle, 150);
 
-/* ------------------------------
+/* ----------------------------------
    AUDIO PLAYBACK
------------------------------- */
+---------------------------------- */
+
 const introAudio = document.getElementById("intro-audio");
 introAudio.volume = 0.7;
 introAudio.loop = true;
@@ -160,9 +163,10 @@ function enableAudio() {
 window.addEventListener("click", enableAudio, { once: true });
 window.addEventListener("keydown", enableAudio, { once: true });
 
-/* ------------------------------
+/* ----------------------------------
    GLITCH TRANSITIONS
------------------------------- */
+---------------------------------- */
+
 function glitchTransition(fromId, toId) {
   const glitch = document.getElementById("glitch");
   glitch.style.animation = "glitchFlash 0.35s linear";
@@ -174,6 +178,7 @@ function glitchTransition(fromId, toId) {
   }, 350);
 }
 
+/* TITLE → MENU */
 window.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     glitchTransition("title-screen", "menu-screen");
@@ -184,6 +189,7 @@ window.addEventListener("click", () => {
   glitchTransition("title-screen", "menu-screen");
 });
 
+/* MENU → NEW GAME */
 document.getElementById("new-game").addEventListener("click", () => {
   glitchTransition("menu-screen", "newgame-screen");
 });
@@ -191,4 +197,3 @@ document.getElementById("new-game").addEventListener("click", () => {
 
 </body>
 </html>
-
