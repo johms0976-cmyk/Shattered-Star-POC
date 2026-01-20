@@ -123,7 +123,7 @@
 
 <script>
 /* ----------------------------------
-   TITLE SCREEN ANIMATION LOOP
+   TITLE SCREEN ANIMATION LOOP (with pause)
 ---------------------------------- */
 
 const frames = [
@@ -141,11 +141,23 @@ let frameIndex = 0;
 const titleImage = document.getElementById("title-image");
 
 function animateTitle() {
-  frameIndex = (frameIndex + 1) % frames.length;
+  frameIndex++;
+
+  // End of loop → reset + pause
+  if (frameIndex >= frames.length) {
+    frameIndex = 0;
+    titleImage.src = frames[frameIndex];
+    setTimeout(animateTitle, 150); // pause at end of loop
+    return;
+  }
+
+  // Normal frame advance
   titleImage.src = frames[frameIndex];
+  setTimeout(animateTitle, 150);
 }
 
-setInterval(animateTitle, 150);
+// Start animation
+setTimeout(animateTitle, 150);
 
 /* ----------------------------------
    AUDIO PLAYBACK
@@ -169,8 +181,8 @@ window.addEventListener("keydown", enableAudio, { once: true });
 function glitchTransition(fromId, toId) {
   const glitch = document.getElementById("glitch");
 
-  glitch.style.animation = "none";  
-  glitch.offsetHeight; // force reflow so animation restarts
+  glitch.style.animation = "none";
+  glitch.offsetHeight; // force reflow
 
   glitch.style.animation = "glitchFlash 0.35s linear";
 
