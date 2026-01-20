@@ -163,11 +163,15 @@ window.addEventListener("click", enableAudio, { once: true });
 window.addEventListener("keydown", enableAudio, { once: true });
 
 /* ----------------------------------
-   GLITCH TRANSITION
+   GLITCH TRANSITION (with animation reset)
 ---------------------------------- */
 
 function glitchTransition(fromId, toId) {
   const glitch = document.getElementById("glitch");
+
+  glitch.style.animation = "none";  
+  glitch.offsetHeight; // force reflow so animation restarts
+
   glitch.style.animation = "glitchFlash 0.35s linear";
 
   setTimeout(() => {
