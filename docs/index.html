@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Shattered-Star-POC</title>
+<title>Shattered Star</title>
 
 <style>
   html, body {
@@ -66,6 +66,32 @@
   .menu-item:hover {
     color: #ffffff;
   }
+
+  /* Glitch Flash Overlay */
+  .glitch-flash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    z-index: 999;
+    animation: none;
+  }
+
+  @keyframes glitchFlash {
+    0%   { opacity: 0; transform: translate(0,0); filter: none; }
+    10%  { opacity: 1; transform: translate(-5px, 3px); filter: hue-rotate(40deg) saturate(2); }
+    20%  { opacity: 0.6; transform: translate(4px, -2px); filter: hue-rotate(-20deg); }
+    30%  { opacity: 1; transform: translate(-3px, 1px); filter: contrast(2); }
+    40%  { opacity: 0.4; transform: translate(2px, -3px); filter: hue-rotate(90deg); }
+    60%  { opacity: 0.8; transform: translate(-2px, 2px); filter: none; }
+    80%  { opacity: 0.2; transform: translate(0,0); }
+    100% { opacity: 0; transform: translate(0,0); filter: none; }
+  }
 </style>
 </head>
 
@@ -79,7 +105,7 @@
 
 <!-- START MENU SCREEN -->
 <div id="start-screen" class="screen">
-  <img src="assets/title/title3.png" class="title-frame"> <!-- placeholder background -->
+  <img src="assets/start/startscreen1.png" class="title-frame">
   <div class="menu">
     <div class="menu-item">NEW GAME</div>
     <div class="menu-item">CONTINUE</div>
@@ -87,6 +113,10 @@
   </div>
 </div>
 
+<!-- GLITCH FLASH -->
+<div id="glitch" class="glitch-flash"></div>
+
+<!-- AUDIO -->
 <audio id="intro-audio" src="assets/audio/intro.ogg" preload="auto"></audio>
 
 <script>
@@ -113,7 +143,7 @@ function animateTitle() {
   titleImage.src = frames[frameIndex];
 }
 
-setInterval(animateTitle, 150); // adjust speed if needed
+setInterval(animateTitle, 150);
 
 /* ------------------------------
    AUDIO PLAYBACK
@@ -123,21 +153,28 @@ const introAudio = document.getElementById("intro-audio");
 introAudio.volume = 0.7;
 introAudio.loop = true;
 
-window.addEventListener("click", () => {
+// Required for browser autoplay rules
+function enableAudio() {
   introAudio.play().catch(() => {});
-}, { once: true });
+}
 
-window.addEventListener("keydown", () => {
-  introAudio.play().catch(() => {});
-}, { once: true });
+window.addEventListener("click", enableAudio, { once: true });
+window.addEventListener("keydown", enableAudio, { once: true });
 
 /* ------------------------------
-   ENTER → START SCREEN
+   GLITCH TRANSITION
 ------------------------------ */
 
 function goToStartScreen() {
-  document.getElementById("title-screen").classList.remove("active");
-  document.getElementById("start-screen").classList.add("active");
+  const glitch = document.getElementById("glitch");
+
+  glitch.style.animation = "glitchFlash 0.35s linear";
+
+  setTimeout(() => {
+    glitch.style.animation = "none";
+    document.getElementById("title-screen").classList.remove("active");
+    document.getElementById("start-screen").classList.add("active");
+  }, 350);
 }
 
 window.addEventListener("keydown", (e) => {
@@ -153,3 +190,4 @@ window.addEventListener("click", () => {
 
 </body>
 </html>
+
