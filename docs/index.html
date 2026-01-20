@@ -1,98 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Shattered-Star-POC</title>
+  <meta charset="UTF-8">
+  <title>Shattered-Star-POC</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      font-family: monospace;
+    }
 
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: black;
-    overflow: hidden;
-    font-family: monospace;
-  }
+    .screen {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      display: none;
+    }
 
-  .screen {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    display: none;
-  }
+    .active {
+      display: block;
+    }
 
-  .active {
-    display: block;
-  }
+    .title-frame {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-  .title-frame {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+    .press-enter {
+      position: absolute;
+      bottom: 5%;
+      width: 100%;
+      text-align: center;
+      font-size: 2em;
+      color: #00ccff;
+      animation: blink 1s step-end infinite;
+    }
 
-  /* PRESS ENTER blinking */
-  .press-enter {
-    position: absolute;
-    bottom: 5%;
-    width: 100%;
-    text-align: center;
-    font-size: 2em;
-    color: #00ccff;
-    animation: blink 1s step-end infinite;
-  }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
 
-  @keyframes blink {
-    50% { opacity: 0; }
-  }
+    .menu {
+      position: absolute;
+      top: 55%;
+      width: 100%;
+      text-align: center;
+      font-size: 2em;
+      color: #00ccff;
+    }
 
-  /* Start menu */
-  .menu {
-    position: absolute;
-    top: 55%;
-    width: 100%;
-    text-align: center;
-    font-size: 2em;
-    color: #00ccff;
-  }
+    .menu-item {
+      margin: 15px 0;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
 
-  .menu-item {
-    margin: 15px 0;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
+    .menu-item:hover {
+      color: #ffffff;
+    }
 
-  .menu-item:hover {
-    color: #ffffff;
-  }
+    .glitch-flash {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      z-index: 999;
+      animation: none;
+    }
 
-  /* Glitch Flash Overlay */
-  .glitch-flash {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: white;
-    opacity: 0;
-    pointer-events: none;
-    mix-blend-mode: screen;
-    z-index: 999;
-    animation: none;
-  }
-
-  @keyframes glitchFlash {
-    0%   { opacity: 0; transform: translate(0,0); filter: none; }
-    10%  { opacity: 1; transform: translate(-5px, 3px); filter: hue-rotate(40deg) saturate(2); }
-    20%  { opacity: 0.6; transform: translate(4px, -2px); filter: hue-rotate(-20deg); }
-    30%  { opacity: 1; transform: translate(-3px, 1px); filter: contrast(2); }
-    40%  { opacity: 0.4; transform: translate(2px, -3px); filter: hue-rotate(90deg); }
-    60%  { opacity: 0.8; transform: translate(-2px, 2px); filter: none; }
-    80%  { opacity: 0.2; transform: translate(0,0); }
-    100% { opacity: 0; transform: translate(0,0); filter: none; }
-  }
-</style>
+    @keyframes glitchFlash {
+      0%   { opacity: 0; transform: translate(0,0); filter: none; }
+      10%  { opacity: 1; transform: translate(-5px, 3px); filter: hue-rotate(40deg) saturate(2); }
+      20%  { opacity: 0.6; transform: translate(4px, -2px); filter: hue-rotate(-20deg); }
+      30%  { opacity: 1; transform: translate(-3px, 1px); filter: contrast(2); }
+      40%  { opacity: 0.4; transform: translate(2px, -3px); filter: hue-rotate(90deg); }
+      60%  { opacity: 0.8; transform: translate(-2px, 2px); filter: none; }
+      80%  { opacity: 0.2; transform: translate(0,0); }
+      100% { opacity: 0; transform: translate(0,0); filter: none; }
+    }
+  </style>
 </head>
 
 <body>
@@ -103,20 +99,20 @@
   <div class="press-enter">PRESS ENTER</div>
 </div>
 
-<!-- NEW GAME SCREEN -->
-<div id="start-screen" class="screen">
-  <img src="assets/screens/newgame/newgame1.png" class="title-frame">
-    <div class="press-enter">BEGIN</div>
-</div>
-
-<!-- START MENU SCREEN -->
-<div id="start-screen" class="screen">
+<!-- MENU SCREEN -->
+<div id="menu-screen" class="screen">
   <img src="assets/screens/start/startscreen1.png" class="title-frame">
   <div class="menu">
-    <div class="menu-item">NEW GAME</div>
+    <div class="menu-item" id="new-game">NEW GAME</div>
     <div class="menu-item">CONTINUE</div>
     <div class="menu-item">SETTINGS</div>
   </div>
+</div>
+
+<!-- NEW GAME SCREEN -->
+<div id="newgame-screen" class="screen">
+  <img src="assets/screens/newgame/newgame1.png" class="title-frame">
+  <div class="press-enter">BEGIN</div>
 </div>
 
 <!-- GLITCH FLASH -->
@@ -129,7 +125,6 @@
 /* ------------------------------
    TITLE SCREEN ANIMATION LOOP
 ------------------------------ */
-
 const frames = [
   "assets/title/title1.png",
   "assets/title/title2.png",
@@ -154,12 +149,10 @@ setInterval(animateTitle, 150);
 /* ------------------------------
    AUDIO PLAYBACK
 ------------------------------ */
-
 const introAudio = document.getElementById("intro-audio");
 introAudio.volume = 0.7;
 introAudio.loop = true;
 
-// Required for browser autoplay rules
 function enableAudio() {
   introAudio.play().catch(() => {});
 }
@@ -168,47 +161,34 @@ window.addEventListener("click", enableAudio, { once: true });
 window.addEventListener("keydown", enableAudio, { once: true });
 
 /* ------------------------------
-   GLITCH TRANSITION
+   GLITCH TRANSITIONS
 ------------------------------ */
-
-function goToStartScreen() {
+function glitchTransition(fromId, toId) {
   const glitch = document.getElementById("glitch");
-
   glitch.style.animation = "glitchFlash 0.35s linear";
 
   setTimeout(() => {
     glitch.style.animation = "none";
-    document.getElementById("title-screen").classList.remove("active");
-    document.getElementById("start-screen").classList.add("active");
+    document.getElementById(fromId).classList.remove("active");
+    document.getElementById(toId).classList.add("active");
   }, 350);
 }
 
 window.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
-    goToStartScreen();
+    glitchTransition("title-screen", "menu-screen");
   }
 });
 
 window.addEventListener("click", () => {
-  goToStartScreen();
+  glitchTransition("title-screen", "menu-screen");
 });
 
-function goToNewGameScreen() {
-  const glitch = document.getElementById("glitch");
-
-  glitch.style.animation = "glitchFlash 0.35s linear";
-
-  setTimeout(() => {
-    glitch.style.animation = "none";
-    document.getElementById("menu-screen").classList.remove("active");
-    document.getElementById("newgame-screen").classList.add("active");
-  }, 350);
-}
-
-document.getElementById("new-game").addEventListener("click", goToNewGameScreen);
-  
+document.getElementById("new-game").addEventListener("click", () => {
+  glitchTransition("menu-screen", "newgame-screen");
+});
 </script>
 
 </body>
 </html>
-k
+
