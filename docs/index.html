@@ -177,16 +177,6 @@ function glitchTransition(fromId, toId) {
   }, 350);
 }
 
-  function glitchTransition1(fromId, toId) {
-  const glitch = document.getElementById("glitch1");
-  glitch.style.animation = "glitchFlash 1.00s linear";
-
-  setTimeout(() => {
-    glitch.style.animation = "none";
-    document.getElementById(fromId).classList.remove("active");
-    document.getElementById(toId).classList.add("active");
-  }, 350);
-}
 
 /* ----------------------------------
    SCREEN SWITCHING
@@ -207,7 +197,7 @@ window.addEventListener("keydown", (e) => {
 
 /* START → NEW GAME */
 document.getElementById("new-game").addEventListener("click", () => {
-  glitchTransition1("start-screen", "newgame-screen");
+  glitchTransition("start-screen", "newgame-screen");
 });
 </script>
 
