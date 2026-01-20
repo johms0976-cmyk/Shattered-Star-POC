@@ -1,6 +1,6 @@
 import { showTitle } from "./title.js";
 import { showStart } from "./start.js";
-import { showMap } from "./map/mapRenderer.js";
+import { showMap } from "./systems/map/mapRenderer.js";
 
 export const STATE = {
   TITLE: "title",
