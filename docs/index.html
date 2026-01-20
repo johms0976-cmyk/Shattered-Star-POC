@@ -65,6 +65,31 @@
     .menu-item:hover {
       color: white;
     }
+
+    /* GLITCH FLASH OVERLAY */
+    #glitch {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      z-index: 999;
+    }
+
+    @keyframes glitchFlash {
+      0%   { opacity: 0; transform: translate(0,0); filter: none; }
+      10%  { opacity: 1; transform: translate(-5px, 3px); filter: hue-rotate(40deg) saturate(2); }
+      20%  { opacity: 0.6; transform: translate(4px, -2px); filter: hue-rotate(-20deg); }
+      30%  { opacity: 1; transform: translate(-3px, 1px); filter: contrast(2); }
+      40%  { opacity: 0.4; transform: translate(2px, -3px); filter: hue-rotate(90deg); }
+      60%  { opacity: 0.8; transform: translate(-2px, 2px); filter: none; }
+      80%  { opacity: 0.2; transform: translate(0,0); }
+      100% { opacity: 0; transform: translate(0,0); filter: none; }
+    }
   </style>
 </head>
 
@@ -89,6 +114,9 @@
 <div id="newgame-screen" class="screen">
   <img class="title-frame" src="assets/screens/new-game/newgame1.png">
 </div>
+
+<!-- GLITCH FLASH -->
+<div id="glitch"></div>
 
 <!-- AUDIO -->
 <audio id="intro-audio" src="assets/audio/intro.ogg" preload="auto"></audio>
@@ -135,17 +163,27 @@ window.addEventListener("click", enableAudio, { once: true });
 window.addEventListener("keydown", enableAudio, { once: true });
 
 /* ----------------------------------
+   GLITCH TRANSITION
+---------------------------------- */
+
+function glitchTransition(fromId, toId) {
+  const glitch = document.getElementById("glitch");
+  glitch.style.animation = "glitchFlash 0.35s linear";
+
+  setTimeout(() => {
+    glitch.style.animation = "none";
+    document.getElementById(fromId).classList.remove("active");
+    document.getElementById(toId).classList.add("active");
+  }, 350);
+}
+
+/* ----------------------------------
    SCREEN SWITCHING
 ---------------------------------- */
 
-function showScreen(id) {
-  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
 /* TITLE → START */
 function goToStart() {
-  showScreen("start-screen");
+  glitchTransition("title-screen", "start-screen");
 }
 
 document.getElementById("press-enter").addEventListener("click", goToStart);
@@ -158,7 +196,7 @@ window.addEventListener("keydown", (e) => {
 
 /* START → NEW GAME */
 document.getElementById("new-game").addEventListener("click", () => {
-  showScreen("newgame-screen");
+  glitchTransition("start-screen", "newgame-screen");
 });
 </script>
 
