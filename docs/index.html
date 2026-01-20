@@ -1,98 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Shattered-Star-POC</title>
+  <meta charset="UTF-8">
+  <title>Shattered-Star-POC</title>
 
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: black;
-    overflow: hidden;
-    font-family: monospace;
-  }
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      font-family: monospace;
+    }
 
-  .screen {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    display: none;
-  }
+    .screen {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      top: 0;
+      left: 0;
+      display: none;
+    }
 
-  .active {
-    display: block;
-  }
+    .active {
+      display: block;
+    }
 
-  .title-frame {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+    .title-frame {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
 
-  /* PRESS ENTER blinking */
-  .press-enter {
-    position: absolute;
-    bottom: 5%;
-    width: 100%;
-    text-align: center;
-    font-size: 2em;
-    color: #00ccff;
-    animation: blink 1s step-end infinite;
-  }
+    .press-enter {
+      position: absolute;
+      bottom: 5%;
+      width: 100%;
+      text-align: center;
+      font-size: 2em;
+      color: #00ccff;
+      cursor: pointer;
+      animation: blink 1s step-end infinite;
+    }
 
-  @keyframes blink {
-    50% { opacity: 0; }
-  }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
 
-  /* Start menu */
-  .menu {
-    position: absolute;
-    top: 55%;
-    width: 100%;
-    text-align: center;
-    font-size: 2em;
-    color: #00ccff;
-  }
+    .menu {
+      position: absolute;
+      top: 60%;
+      width: 100%;
+      text-align: center;
+      font-size: 2em;
+      color: #00ccff;
+    }
 
-  .menu-item {
-    margin: 15px 0;
-    cursor: pointer;
-    transition: color 0.2s;
-  }
+    .menu-item {
+      margin: 15px 0;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
 
-  .menu-item:hover {
-    color: #ffffff;
-  }
-
-  /* Glitch Flash Overlay */
-  .glitch-flash {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: white;
-    opacity: 0;
-    pointer-events: none;
-    mix-blend-mode: screen;
-    z-index: 999;
-    animation: none;
-  }
-
-  @keyframes glitchFlash {
-    0%   { opacity: 0; transform: translate(0,0); filter: none; }
-    10%  { opacity: 1; transform: translate(-5px, 3px); filter: hue-rotate(40deg) saturate(2); }
-    20%  { opacity: 0.6; transform: translate(4px, -2px); filter: hue-rotate(-20deg); }
-    30%  { opacity: 1; transform: translate(-3px, 1px); filter: contrast(2); }
-    40%  { opacity: 0.4; transform: translate(2px, -3px); filter: hue-rotate(90deg); }
-    60%  { opacity: 0.8; transform: translate(-2px, 2px); filter: none; }
-    80%  { opacity: 0.2; transform: translate(0,0); }
-    100% { opacity: 0; transform: translate(0,0); filter: none; }
-  }
-</style>
+    .menu-item:hover {
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
@@ -100,45 +73,40 @@
 <!-- TITLE SCREEN -->
 <div id="title-screen" class="screen active">
   <img id="title-image" class="title-frame" src="assets/screens/title/title1.png">
-  <div class="press-enter">PRESS ENTER</div>
+  <div id="press-enter" class="press-enter">PRESS ENTER</div>
 </div>
 
-<!-- NEW GAME SCREEN -->
+<!-- START SCREEN -->
 <div id="start-screen" class="screen">
-  <img src="assets/screens/newgame/newgame1.png" class="title-frame">
-    <div class="press-enter">BEGIN</div>
-</div>
-
-<!-- START MENU SCREEN -->
-<div id="start-screen" class="screen">
-  <img src="assets/screens/start/startscreen1.png" class="title-frame">
+  <img class="title-frame" src="assets/screens/start/startscreen1.png">
   <div class="menu">
-    <div class="menu-item">NEW GAME</div>
-    <div class="menu-item">CONTINUE</div>
+    <div id="new-game" class="menu-item">NEW GAME</div>
     <div class="menu-item">SETTINGS</div>
   </div>
 </div>
 
-<!-- GLITCH FLASH -->
-<div id="glitch" class="glitch-flash"></div>
+<!-- NEW GAME SCREEN -->
+<div id="newgame-screen" class="screen">
+  <img class="title-frame" src="assets/screens/new-game/newgame1.png">
+</div>
 
 <!-- AUDIO -->
 <audio id="intro-audio" src="assets/audio/intro.ogg" preload="auto"></audio>
 
 <script>
-/* ------------------------------
+/* ----------------------------------
    TITLE SCREEN ANIMATION LOOP
------------------------------- */
+---------------------------------- */
 
 const frames = [
-  "assets/title/title1.png",
-  "assets/title/title2.png",
-  "assets/title/title3.png",
-  "assets/title/title4.png",
-  "assets/title/title5.png",
-  "assets/title/title4.png",
-  "assets/title/title3.png",
-  "assets/title/title2.png"
+  "assets/screens/title/title1.png",
+  "assets/screens/title/title2.png",
+  "assets/screens/title/title3.png",
+  "assets/screens/title/title4.png",
+  "assets/screens/title/title5.png",
+  "assets/screens/title/title4.png",
+  "assets/screens/title/title3.png",
+  "assets/screens/title/title2.png"
 ];
 
 let frameIndex = 0;
@@ -151,15 +119,14 @@ function animateTitle() {
 
 setInterval(animateTitle, 150);
 
-/* ------------------------------
+/* ----------------------------------
    AUDIO PLAYBACK
------------------------------- */
+---------------------------------- */
 
 const introAudio = document.getElementById("intro-audio");
 introAudio.volume = 0.7;
 introAudio.loop = true;
 
-// Required for browser autoplay rules
 function enableAudio() {
   introAudio.play().catch(() => {});
 }
@@ -167,30 +134,31 @@ function enableAudio() {
 window.addEventListener("click", enableAudio, { once: true });
 window.addEventListener("keydown", enableAudio, { once: true });
 
-/* ------------------------------
-   GLITCH TRANSITION
------------------------------- */
+/* ----------------------------------
+   SCREEN SWITCHING
+---------------------------------- */
 
-function goToStartScreen() {
-  const glitch = document.getElementById("glitch");
-
-  glitch.style.animation = "glitchFlash 0.35s linear";
-
-  setTimeout(() => {
-    glitch.style.animation = "none";
-    document.getElementById("title-screen").classList.remove("active");
-    document.getElementById("start-screen").classList.add("active");
-  }, 350);
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 }
+
+/* TITLE → START */
+function goToStart() {
+  showScreen("start-screen");
+}
+
+document.getElementById("press-enter").addEventListener("click", goToStart);
 
 window.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
-    goToStartScreen();
+    goToStart();
   }
 });
 
-window.addEventListener("click", () => {
-  goToStartScreen();
+/* START → NEW GAME */
+document.getElementById("new-game").addEventListener("click", () => {
+  showScreen("newgame-screen");
 });
 </script>
 
