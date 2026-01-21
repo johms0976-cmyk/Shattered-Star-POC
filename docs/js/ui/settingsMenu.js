@@ -2,16 +2,26 @@
 
 import { setState, STATE } from "../core/state.js";
 import { fadeOutUI } from "../core/transitions.js";
+import { assetPath } from "../core/path.js";
 
-export function showSettings() {
+export function showSettingsMenu() {
   const screen = document.getElementById("settings-screen");
-  screen.classList.add("active");
 
-  const backBtn = document.getElementById("btn-settings-back");
-  backBtn.onclick = () => returnToMenu();
-}
+  // Theme buttons
+  const themeDefault = document.getElementById("theme-default");
+  const themeVoidborn = document.getElementById("theme-voidborn");
+  const backBtn = document.getElementById("settings-back");
 
-async function returnToMenu() {
-  await fadeOutUI(500);
-  setState(STATE.START);
+  themeDefault.onclick = () => {
+    document.body.dataset.theme = "default";
+  };
+
+  themeVoidborn.onclick = () => {
+    document.body.dataset.theme = "voidborn";
+  };
+
+  backBtn.onclick = async () => {
+    await fadeOutUI(600);
+    setState(STATE.START);
+  };
 }
