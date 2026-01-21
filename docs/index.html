@@ -5,20 +5,25 @@
   <title>Shattered Star</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <!-- Core Styles -->
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="theme.css" />
 </head>
 
 <body data-theme="default">
 
+  <!-- ========================================================= -->
   <!-- TITLE SCREEN -->
+  <!-- ========================================================= -->
   <div id="title-screen" class="screen">
     <div id="title-bg"></div>
-    <h1>SHATTERED STAR</h1>
+    <h1 class="title-text">SHATTERED STAR</h1>
     <div id="press-enter">PRESS ENTER</div>
   </div>
 
+  <!-- ========================================================= -->
   <!-- LOADING SCREEN -->
+  <!-- ========================================================= -->
   <div id="loading-screen" class="screen">
     <div class="loading-container">
       <div class="loading-spinner"></div>
@@ -29,14 +34,18 @@
     </div>
   </div>
 
+  <!-- ========================================================= -->
   <!-- START SCREEN -->
+  <!-- ========================================================= -->
   <div id="start-screen" class="screen">
     <h1>START</h1>
     <button id="new-game">NEW GAME</button>
     <button id="open-settings">SETTINGS</button>
   </div>
 
+  <!-- ========================================================= -->
   <!-- SETTINGS SCREEN -->
+  <!-- ========================================================= -->
   <div id="settings-screen" class="screen">
     <h1>SETTINGS</h1>
 
@@ -47,7 +56,9 @@
     <button id="settings-back">Back</button>
   </div>
 
+  <!-- ========================================================= -->
   <!-- NEW GAME SCREEN -->
+  <!-- ========================================================= -->
   <div id="newgame-screen" class="screen">
     <h1>NEW GAME</h1>
 
@@ -73,18 +84,26 @@
     <button id="begin-run">Begin Run</button>
   </div>
 
-  <!-- ACT INTRO -->
+  <!-- ========================================================= -->
+  <!-- ACT INTRO SCREEN -->
+  <!-- ========================================================= -->
   <div id="act-intro" class="screen"></div>
 
+  <!-- ========================================================= -->
   <!-- MAP SCREEN -->
+  <!-- ========================================================= -->
   <div id="map-screen" class="screen">
     <canvas id="map-canvas"></canvas>
   </div>
 
+  <!-- ========================================================= -->
   <!-- COMBAT SCREEN -->
+  <!-- ========================================================= -->
   <div id="combat-screen" class="screen"></div>
 
+  <!-- ========================================================= -->
   <!-- ENTRY POINT -->
+  <!-- ========================================================= -->
   <script type="module" src="main.js"></script>
 
 </body>
