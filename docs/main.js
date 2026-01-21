@@ -1,13 +1,13 @@
 // main.js
 
-import { STATE, setState, onStateChange } from "/js/core/state.js";
-import { preloadAllAssets } from "/js/core/loader.js";
+import { STATE, setState, onStateChange } from "./js/core/state.js";
+import { preloadAllAssets } from "./js/core/loader.js";
 
 // UI modules
-import { showTitle } from "/js/ui/titleScreen.js";
-import { showStartScreen } from "/js/ui/startScreen.js";
-import { showNewGameScreen } from "/js/ui/newGameScreen.js";
-import { showMapScreen } from "/js/ui/mapScreen.js";
+import { showTitle } from "./js/ui/titleScreen.js";
+import { showStartScreen } from "./js/ui/startScreen.js";
+import { showNewGameScreen } from "./js/ui/newGameScreen.js";
+import { showMapScreen } from "./js/ui/mapScreen.js";
 
 // ------------------------------------------------------------
 // INITIAL BOOT
