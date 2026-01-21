@@ -5,14 +5,14 @@
       "assets/ui/title.png",
       "assets/ui/logo.png",
 
-      "assets/ui/title1.png",
-      "assets/ui/title2.png",
-      "assets/ui/title3.png",
-      "assets/ui/title4.png",
-      "assets/ui/title5.png",
+      "assets/screens/title/title1.png",
+      "assets/screens/title/title2.png",
+      "assets/screens/title/title3.png",
+      "assets/screens/title/title4.png",
+      "assets/screens/title/title5.png",
 
-      "assets/ui/newgame1.png",
-      "assets/ui/startscreen1.png"
+      "assets/screens/new-game/newgame1.png",
+      "assets/screens/start/startscreen1.png"
     ],
     "audio": [
       "assets/audio/ui-click.wav",
