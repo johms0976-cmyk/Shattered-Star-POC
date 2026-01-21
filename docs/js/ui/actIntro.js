@@ -1,19 +1,32 @@
 // js/ui/actIntro.js
 
 import { setState, STATE } from "../core/state.js";
-import { fadeOutUI, fadeInUI, corruptionSpread } from "../core/transitions.js";
+import { fadeOutUI } from "../core/transitions.js";
 
 export function showActIntro() {
-  const screen = document.getElementById("act-intro-screen");
+  const screen = document.getElementById("act-intro");
+  screen.innerHTML = "";
+
+  const text = document.createElement("div");
+  text.className = "act-intro-text";
+  text.innerText = "In the shadow of the shattered star, corruption spreads...\nYour journey begins.";
+
+  screen.appendChild(text);
   screen.classList.add("active");
 
-  runActIntroSequence();
-}
+  // Crawl animation
+  text.style.opacity = 0;
+  text.style.transform = "translateY(40px)";
 
-async function runActIntroSequence() {
-  await fadeOutUI(600);
-  await corruptionSpread();
-  await fadeInUI(600);
+  requestAnimationFrame(() => {
+    text.style.transition = "all 2.5s ease";
+    text.style.opacity = 1;
+    text.style.transform = "translateY(0px)";
+  });
 
-  setState(STATE.MAP);
+  // After 3 seconds → fade out → map
+  setTimeout(async () => {
+    await fadeOutUI(800);
+    setState(STATE.MAP);
+  }, 3500);
 }
