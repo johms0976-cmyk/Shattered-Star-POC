@@ -1,14 +1,17 @@
 // js/core/path.js
 
-// Detect the base URL of the game automatically.
-// Works on GitHub Pages, local dev, and custom domains.
+// Automatically detects the correct base path whether hosted at:
+// /Shattered-Star-POC/  (GitHub Pages)
+// /                     (root)
+// custom domain
+// localhost
 export const BASE_PATH = (() => {
   const path = window.location.pathname;
 
-  // If hosted in a subfolder (e.g., /Shattered-Star-POC/)
+  // Split into parts, remove empty segments
   const parts = path.split("/").filter(Boolean);
 
-  // If the repo name is present, use it as the base
+  // If hosted in a subfolder (e.g., /Shattered-Star-POC/)
   if (parts.length > 0) {
     return "/" + parts[0] + "/";
   }
