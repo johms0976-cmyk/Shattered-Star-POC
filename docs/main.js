@@ -1,54 +1,94 @@
 // main.js
 
-import { setState, STATE, GameState } from "./js/core/state.js";
-import { applyState } from "./js/core/stateRouter.js";
-import { preloadAllAssets } from "./js/core/loader.js";
+import { STATE, setState, onStateChange } from "./core/state.js";
+import { preloadAllAssets } from "./core/loader.js";
 
-import {
-  showLoading,
-  setLoadingStage,
-  updateLoadingProgressSmooth
-} from "./js/ui/loadingScreen.js";
+// UI modules
+import { showTitle } from "./ui/titleScreen.js";
+import { showStartScreen } from "./ui/startScreen.js";
+import { showNewGameScreen } from "./ui/newGameScreen.js";
+import { showMapScreen } from "./ui/mapScreen.js";
 
-// UI Screens (side-effect imports)
-import "./js/ui/titleScreen.js";
-import "./js/ui/mainMenu.js";
-import "./js/ui/newGame.js";
-import "./js/ui/loadingScreen.js";
-import "./js/ui/settingsMenu.js";
-import "./js/ui/actIntro.js";
-
-// Map System
-import "./js/systems/map/mapUI.js";
-import "./js/systems/map/mapCanvasScene.js";
-import "./js/systems/map/mapGenerator.js";
-
-// Combat System
-import "./js/systems/combat/combatUI.js";
-import "./js/systems/combat/engine.js";
-import "./js/systems/combat/actions.js";
-import "./js/systems/combat/statusEffects.js";
-import "./js/systems/combat/enemyAI.js";
-
-async function boot() {
-  // Step 1: Enter loading state
+// ------------------------------------------------------------
+// INITIAL BOOT
+// ------------------------------------------------------------
+window.addEventListener("DOMContentLoaded", async () => {
+  // Start with loading screen
   setState(STATE.LOADING);
-  applyState();
-  showLoading();
 
-  // Step 2: Determine which Act to load assets for
-  const act = GameState.run.act || 1;
-
-  // Step 3: Preload assets using the manifest
   await preloadAllAssets(
-    stageText => setLoadingStage(stageText),
-    progress => updateLoadingProgressSmooth(progress),
-    act
+    stage => updateLoadingStage(stage),
+    progress => updateLoadingProgress(progress)
   );
 
-  // Step 4: When done, go to title screen
+  // After loading, go to title
   setState(STATE.TITLE);
-  applyState();
+});
+
+// ------------------------------------------------------------
+// STATE ROUTER
+// ------------------------------------------------------------
+onStateChange(newState => {
+  hideAllScreens();
+
+  switch (newState) {
+    case STATE.TITLE:
+      showScreen("title-screen");
+      showTitle();
+      break;
+
+    case STATE.START:
+      showScreen("start-screen");
+      showStartScreen();
+      break;
+
+    case STATE.NEW_GAME:
+      showScreen("newgame-screen");
+      showNewGameScreen();
+      break;
+
+    case STATE.MAP:
+      showScreen("map-screen");
+      showMapScreen();
+      break;
+
+    case STATE.COMBAT:
+      showScreen("combat-screen");
+      // combat screen module goes here
+      break;
+
+    case STATE.SETTINGS:
+      showScreen("settings-screen");
+      // settings screen module goes here
+      break;
+
+    case STATE.ACT_INTRO:
+      showScreen("act-intro");
+      // act intro module goes here
+      break;
+  }
+});
+
+// ------------------------------------------------------------
+// SCREEN HELPERS
+// ------------------------------------------------------------
+function hideAllScreens() {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
 }
 
-boot();
+function showScreen(id) {
+  document.getElementById(id).classList.add("active");
+}
+
+// ------------------------------------------------------------
+// LOADING SCREEN HELPERS
+// ------------------------------------------------------------
+function updateLoadingStage(text) {
+  const el = document.querySelector(".loading-text");
+  if (el) el.textContent = text;
+}
+
+function updateLoadingProgress(value) {
+  const bar = document.getElementById("loading-progress");
+  if (bar) bar.style.width = `${Math.floor(value * 100)}%`;
+}
