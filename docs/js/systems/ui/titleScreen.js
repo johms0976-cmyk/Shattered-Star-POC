@@ -2,6 +2,7 @@
 
 import { setState, STATE } from "../core/state.js";
 import { applyState } from "../core/stateRouter.js";
+import { glitchFlash } from "../core/transitions.js";
 
 let initialized = false;
 
@@ -9,13 +10,14 @@ export function showTitle() {
   const screen = document.getElementById("title-screen");
   screen.classList.add("active");
 
-  // Only wire listeners once
   if (!initialized) {
     const pressEnter = document.getElementById("press-enter");
 
     const goToStart = () => {
-      setState(STATE.START);
-      applyState();
+      glitchFlash(150, () => {
+        setState(STATE.START);
+        applyState();
+      });
     };
 
     pressEnter.onclick = goToStart;
