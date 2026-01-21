@@ -1,19 +1,31 @@
 // js/systems/combat/combatUI.js
 
-import { GameState } from "../../core/state.js";
+import { setState, STATE } from "../../core/state.js";
+import {
+  fadeOutUI,
+  glitchFlashCanvas,
+  staticBurstCanvas,
+  crtPulseCanvas
+} from "../../core/transitions.js";
 
 export function showCombat() {
   const screen = document.getElementById("combat-screen");
   screen.classList.add("active");
 
-  screen.innerHTML = `
-    <div style="
-      color:#00ccff;
-      font-size:2em;
-      padding:40px;
-    ">
-      COMBAT START<br><br>
-      Node type: ${GameState.run.currentNode.type}
-    </div>
-  `;
+  // Example: UI buttons for testing transitions
+  const glitchBtn = document.getElementById("combat-btn-glitch");
+  const staticBtn = document.getElementById("combat-btn-static");
+  const crtBtn = document.getElementById("combat-btn-crt");
+  const fleeBtn = document.getElementById("combat-btn-flee");
+
+  if (glitchBtn) glitchBtn.onclick = () => glitchFlashCanvas(150);
+  if (staticBtn) staticBtn.onclick = () => staticBurstCanvas(200);
+  if (crtBtn) crtBtn.onclick = () => crtPulseCanvas(400);
+
+  if (fleeBtn) fleeBtn.onclick = () => fleeCombat();
+}
+
+async function fleeCombat() {
+  await fadeOutUI(600);
+  setState(STATE.MAP);
 }
