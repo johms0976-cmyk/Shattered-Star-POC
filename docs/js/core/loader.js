@@ -1,36 +1,72 @@
 // js/core/loader.js
 
-// Cache for all loaded assets (images, audio, JSON)
+// ============================================================
+// ASSET CACHE
+// ============================================================
+
 let assetCache = new Map();
 
-// -------------------------------
-// JSON LOADER
-// -------------------------------
+// ============================================================
+// BULLETPROOF JSON LOADER
+// ============================================================
+
 async function loadJSON(url) {
   if (assetCache.has(url)) return assetCache.get(url);
 
-  const promise = fetch(url).then(res => {
-    if (!res.ok) throw new Error(`Failed to load JSON: ${url}`);
-    return res.json();
-  });
+  const promise = fetch(url)
+    .then(res => {
+      if (!res.ok) {
+        console.error(`JSON fetch failed: ${url}`);
+        return {};
+      }
+      return res.json().catch(err => {
+        console.error(`Invalid JSON in ${url}:`, err);
+        return {};
+      });
+    })
+    .catch(err => {
+      console.error(`JSON load error: ${url}`, err);
+      return {};
+    });
 
   assetCache.set(url, promise);
   return promise;
 }
 
-// -------------------------------
-// IMAGE LOADER
-// -------------------------------
+// ============================================================
+// BULLETPROOF IMAGE LOADER
+// ============================================================
+
 function loadImage(url) {
   if (assetCache.has(url)) return assetCache.get(url);
 
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise(resolve => {
     const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = () => {
-      console.error(`Failed to load image: ${url}`);
-      reject(new Error(`Failed to load image: ${url}`));
+    let done = false;
+
+    const finish = () => {
+      if (!done) {
+        done = true;
+        resolve(img);
+      }
     };
+
+    const timeout = setTimeout(() => {
+      console.warn(`Image load timeout: ${url}`);
+      finish();
+    }, 3000);
+
+    img.onload = () => {
+      clearTimeout(timeout);
+      finish();
+    };
+
+    img.onerror = () => {
+      clearTimeout(timeout);
+      console.error(`Failed to load image: ${url}`);
+      finish();
+    };
+
     img.src = url;
   });
 
@@ -38,43 +74,36 @@ function loadImage(url) {
   return promise;
 }
 
-// -------------------------------
-// FIXED + CROSS-BROWSER AUDIO LOADER
-// -------------------------------
+// ============================================================
+// BULLETPROOF AUDIO LOADER
+// ============================================================
+
 function loadAudio(url) {
   if (assetCache.has(url)) return assetCache.get(url);
 
-  const promise = new Promise((resolve, reject) => {
+  const promise = new Promise(resolve => {
     const audio = new Audio();
-    let resolved = false;
+    let done = false;
 
     const finish = () => {
-      if (!resolved) {
-        resolved = true;
+      if (!done) {
+        done = true;
         resolve(audio);
       }
     };
 
-    // Most reliable event across browsers
     audio.onloadeddata = finish;
-
-    // Safari sometimes only fires this
     audio.onloadedmetadata = finish;
-
-    // Chrome sometimes fires this first
     audio.oncanplay = finish;
 
-    // Fallback timeout to prevent infinite hangs
     setTimeout(() => {
-      if (!resolved) {
-        console.warn(`Audio load timeout, continuing anyway: ${url}`);
-        finish();
-      }
+      console.warn(`Audio load timeout: ${url}`);
+      finish();
     }, 3000);
 
     audio.onerror = () => {
       console.error(`Failed to load audio: ${url}`);
-      reject(new Error(`Failed to load audio: ${url}`));
+      finish();
     };
 
     audio.src = url;
@@ -85,45 +114,68 @@ function loadAudio(url) {
   return promise;
 }
 
-// -------------------------------
-// LOAD A LIST OF ASSETS BY TYPE
-// -------------------------------
-async function loadAssetList(list, type, onItemLoaded) {
-  const loaders = {
-    images: loadImage,
-    audio: loadAudio,
-    data: loadJSON
-  };
+// ============================================================
+// LOAD A LIST OF ASSETS
+// ============================================================
 
+async function loadAssetList(list, type, onItemLoaded) {
+  const loaders = { images: loadImage, audio: loadAudio, data: loadJSON };
   const loader = loaders[type];
+
   if (!loader || !list || list.length === 0) return;
 
   for (const url of list) {
+    console.log(`Loading ${type}:`, url);
+
     try {
       await loader(url);
     } catch (err) {
-      console.warn(err.message);
+      console.warn(`Error loading ${url}:`, err);
     }
+
     if (onItemLoaded) onItemLoaded();
   }
 }
 
-// -------------------------------
-// MAIN PRELOAD FUNCTION
-// -------------------------------
+// ============================================================
+// MANIFEST VALIDATOR (LOGS MISSING FILES)
+// ============================================================
+
+function validateManifest(manifest, act) {
+  const groups = [manifest.core, manifest[`act${act}`]];
+
+  for (const group of groups) {
+    if (!group) continue;
+
+    ["images", "audio", "data"].forEach(type => {
+      const list = group[type] || [];
+      list.forEach(url => {
+        fetch(url, { method: "HEAD" })
+          .then(res => {
+            if (!res.ok) console.warn(`Missing asset: ${url}`);
+          })
+          .catch(() => console.warn(`Missing asset: ${url}`));
+      });
+    });
+  }
+}
+
+// ============================================================
+// MAIN PRELOAD FUNCTION (BULLETPROOF)
+// ============================================================
+
 export async function preloadAllAssets(onStageUpdate, onProgressUpdate, act = 1) {
-  // Load manifest first
   const manifest = await loadJSON("assets/manifest.json");
+
+  validateManifest(manifest, act);
 
   const stages = [];
 
-  // Core assets always load first
   stages.push({
     name: "Loading core assets…",
-    group: manifest.core
+    group: manifest.core || {}
   });
 
-  // Act-specific assets
   const actKey = `act${act}`;
   if (manifest[actKey]) {
     stages.push({
@@ -132,11 +184,12 @@ export async function preloadAllAssets(onStageUpdate, onProgressUpdate, act = 1)
     });
   }
 
-  // Count total items
   let totalItems = 0;
   for (const stage of stages) {
-    const g = stage.group;
-    totalItems += (g.images?.length || 0) + (g.audio?.length || 0) + (g.data?.length || 0);
+    const g = stage.group || {};
+    totalItems += (g.images?.length || 0) +
+                  (g.audio?.length || 0) +
+                  (g.data?.length || 0);
   }
 
   let loadedItems = 0;
@@ -148,14 +201,15 @@ export async function preloadAllAssets(onStageUpdate, onProgressUpdate, act = 1)
     }
   };
 
-  // Load each stage in order
   for (const stage of stages) {
     if (onStageUpdate) onStageUpdate(stage.name);
 
-    const g = stage.group;
+    const g = stage.group || {};
 
     await loadAssetList(g.images, "images", handleItemLoaded);
     await loadAssetList(g.audio, "audio", handleItemLoaded);
     await loadAssetList(g.data, "data", handleItemLoaded);
   }
+
+  return true;
 }
