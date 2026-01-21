@@ -1,42 +1,52 @@
-// assets/manifest.js
+{
+  "core": {
+    "images": [
+      "assets/effects/corruption.png",
+      "assets/ui/title.png",
+      "assets/ui/logo.png",
 
-export const ASSET_MANIFEST = [
+      "assets/ui/title1.png",
+      "assets/ui/title2.png",
+      "assets/ui/title3.png",
+      "assets/ui/title4.png",
+      "assets/ui/title5.png",
 
-  // ------------------------------------------------------------
-  // TITLE SCREEN ANIMATION
-  // ------------------------------------------------------------
-  "assets/screens/title/title1.png",
-  "assets/screens/title/title2.png",
-  "assets/screens/title/title3.png",
-  "assets/screens/title/title4.png",
-  "assets/screens/title/title5.png",
+      "assets/ui/newgame1.png",
+      "assets/ui/startscreen1.png"
+    ],
+    "audio": [
+      "assets/audio/ui-click.wav",
+      "assets/audio/intro.ogg"
+    ],
+    "data": [
+      "data/enemies.json"
+    ]
+  },
 
-  // ------------------------------------------------------------
-  // START SCREEN
-  // ------------------------------------------------------------
-  "assets/screens/start/startscreen1.png",
+  "act1": {
+    "images": [
+      "assets/acts/act1/map-bg.png",
+      "assets/acts/act1/node-normal.png",
+      "assets/acts/act1/node-elite.png"
+    ],
+    "audio": [
+      "assets/audio/act1-theme.mp3"
+    ],
+    "data": [
+      "data/act1.json"
+    ]
+  },
 
-  // ------------------------------------------------------------
-  // NEW GAME SCREEN
-  // ------------------------------------------------------------
-  "assets/screens/new-game/newgame1.png",
-
-  // ------------------------------------------------------------
-  // (Add more assets below as needed)
-  // ------------------------------------------------------------
-  // UI elements
-  // "assets/ui/button.png",
-  // "assets/ui/panel.png",
-
-  // Heroes
-  // "assets/heroes/korvax.png",
-  // "assets/heroes/lyria.png",
-
-  // Maps
-  // "assets/maps/act1_surface.png",
-  // "assets/maps/act2_corrupted.png",
-
-  // Enemies
-  // "assets/enemies/beast.png",
-  // "assets/enemies/voidling.png",
-];
+  "act2": {
+    "images": [
+      "assets/acts/act2/map-bg.png",
+      "assets/acts/act2/node-corrupted.png"
+    ],
+    "audio": [
+      "assets/audio/act2-theme.mp3"
+    ],
+    "data": [
+      "data/act2.json"
+    ]
+  }
+}
