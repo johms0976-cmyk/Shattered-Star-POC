@@ -1,3 +1,5 @@
+// js/core/state.js
+
 export const STATE = {
   TITLE: "title",
   START: "start",
