@@ -4,7 +4,7 @@
   "description": "Shattered Star — a modular, studio-grade web game engine with automated asset manifest generation.",
   "type": "module",
   "scripts": {
-    "generate-manifest": "nodetools/generateManifest.js"
+    "generate-manifest": "tools/generateManifest.js"
   },
   "author": "Johm",
   "license": "MIT",
