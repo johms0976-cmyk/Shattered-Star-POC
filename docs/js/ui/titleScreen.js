@@ -2,13 +2,14 @@
 
 import { setState, STATE } from "../core/state.js";
 import { fadeOutUI } from "../core/transitions.js";
+import { assetPath } from "../core/path.js";
 
 const TITLE_IMAGES = [
-  "assets/screens/title/title1.png",
-  "assets/screens/title/title2.png",
-  "assets/screens/title/title3.png",
-  "assets/screens/title/title4.png",
-  "assets/screens/title/title5.png"
+  assetPath("assets/screens/title/title1.png"),
+  assetPath("assets/screens/title/title2.png"),
+  assetPath("assets/screens/title/title3.png"),
+  assetPath("assets/screens/title/title4.png"),
+  assetPath("assets/screens/title/title5.png")
 ];
 
 let imagesLoaded = false;
@@ -22,13 +23,9 @@ export async function showTitle() {
 
   screen.classList.add("active");
 
-  // Preload slideshow images
   await preloadTitleImages();
-
-  // Start crossfade slideshow
   startSlideshow(bgA, bgB);
 
-  // Desktop: Enter key
   function handleKey(e) {
     if (!imagesLoaded) return;
     if (e.key === "Enter") {
@@ -39,7 +36,6 @@ export async function showTitle() {
 
   window.addEventListener("keydown", handleKey);
 
-  // Mobile: tap anywhere
   function handleTap() {
     if (!imagesLoaded) return;
     cleanup();
@@ -48,16 +44,12 @@ export async function showTitle() {
 
   screen.addEventListener("click", handleTap);
 
-  // Cleanup helper
   function cleanup() {
     window.removeEventListener("keydown", handleKey);
     screen.removeEventListener("click", handleTap);
   }
 }
 
-/* -----------------------------------------------------------
-   PRELOAD IMAGES
------------------------------------------------------------ */
 async function preloadTitleImages() {
   const promises = TITLE_IMAGES.map(src => {
     return new Promise(resolve => {
@@ -75,11 +67,7 @@ async function preloadTitleImages() {
   imagesLoaded = true;
 }
 
-/* -----------------------------------------------------------
-   SLIDESHOW CROSSFADE
------------------------------------------------------------ */
 function startSlideshow(bgA, bgB) {
-  // Initial frame
   bgA.style.backgroundImage = `url(${TITLE_IMAGES[0]})`;
   bgA.style.opacity = 1;
   bgB.style.opacity = 0;
@@ -89,24 +77,19 @@ function startSlideshow(bgA, bgB) {
   slideshowInterval = setInterval(() => {
     const nextImage = TITLE_IMAGES[currentIndex];
 
-    // Fade B in
     bgB.style.backgroundImage = `url(${nextImage})`;
     bgB.style.opacity = 1;
 
-    // After fade, swap A to new image and hide B
     setTimeout(() => {
       bgA.style.backgroundImage = `url(${nextImage})`;
       bgA.style.opacity = 1;
       bgB.style.opacity = 0;
-    }, 1000); // fade duration
+    }, 1000);
 
     currentIndex = (currentIndex + 1) % TITLE_IMAGES.length;
-  }, 4000); // 4 seconds per slide
+  }, 4000);
 }
 
-/* -----------------------------------------------------------
-   TRANSITION TO START MENU
------------------------------------------------------------ */
 async function startTransitionToMenu() {
   clearInterval(slideshowInterval);
   await fadeOutUI(600);
