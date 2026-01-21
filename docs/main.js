@@ -7,7 +7,7 @@ import { preloadAllAssets } from "/js/core/loader.js";
 import { showTitle } from "/js/ui/titleScreen.js";
 import { showStartScreen } from "/js/ui/startScreen.js";
 import { showNewGameScreen } from "/js/ui/newGameScreen.js";
-import { showMapScreen } from "/js./ui/mapScreen.js";
+import { showMapScreen } from "/js/ui/mapScreen.js";
 
 // ------------------------------------------------------------
 // INITIAL BOOT
