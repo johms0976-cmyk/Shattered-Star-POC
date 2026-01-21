@@ -6,9 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="theme.css" />
 </head>
 
-<body>
+<body data-theme="default">
 
   <!-- TITLE SCREEN -->
   <div id="title-screen" class="screen">
@@ -22,7 +23,6 @@
     <div class="loading-container">
       <div class="loading-spinner"></div>
       <div class="loading-text">LOADING...</div>
-
       <div class="loading-bar">
         <div id="loading-progress"></div>
       </div>
@@ -33,6 +33,18 @@
   <div id="start-screen" class="screen">
     <h1>START</h1>
     <button id="new-game">NEW GAME</button>
+    <button id="open-settings">SETTINGS</button>
+  </div>
+
+  <!-- SETTINGS SCREEN -->
+  <div id="settings-screen" class="screen">
+    <h1>SETTINGS</h1>
+
+    <h2>Theme</h2>
+    <button id="theme-default">Cosmic Noir</button>
+    <button id="theme-voidborn">Voidborn Corruption</button>
+
+    <button id="settings-back">Back</button>
   </div>
 
   <!-- NEW GAME SCREEN -->
@@ -61,8 +73,8 @@
     <button id="begin-run">Begin Run</button>
   </div>
 
-  <!-- ACT I INTRO -->
-  <div id="act1-intro"></div>
+  <!-- ACT INTRO -->
+  <div id="act-intro" class="screen"></div>
 
   <!-- MAP SCREEN -->
   <div id="map-screen" class="screen">
