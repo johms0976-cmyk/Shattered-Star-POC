@@ -1,70 +1,66 @@
 // js/systems/map/mapCanvasScene.js
 
-/**
- * Draws the map background and connections.
- * NO DOM.
- * NO state changes.
- * Canvas only.
- */
-export function drawMapScene(ctx, gameState, renderer) {
-  const map = gameState.run.map;
+import {
+  updateCanvasTransition,
+  renderCanvasTransition,
+  glitchFlashCanvas,
+  staticBurstCanvas,
+  crtPulseCanvas
+} from "../../core/transitions.js";
 
-  // Safety guard
-  if (!map) {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.fillStyle = "red";
-    ctx.font = "16px monospace";
-    ctx.fillText("Map not generated", 20, 30);
-    return;
-  }
+let canvas, ctx;
 
-  drawBackground(ctx);
-  drawConnections(ctx, map.nodes);
+export function initMapCanvas() {
+  canvas = document.getElementById("map-canvas");
+  ctx = canvas.getContext("2d");
+
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  requestAnimationFrame(loop);
 }
 
-/* -----------------------------
-   Background
------------------------------ */
-
-function drawBackground(ctx) {
-  const { width, height } = ctx.canvas;
-
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, width, height);
-
-  // Subtle grid / noise placeholder
-  ctx.strokeStyle = "rgba(255,255,255,0.03)";
-  ctx.lineWidth = 1;
-
-  for (let x = 0; x < width; x += 80) {
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, height);
-    ctx.stroke();
-  }
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
 
-/* -----------------------------
-   Connections
------------------------------ */
-
-function drawConnections(ctx, nodes) {
-  ctx.strokeStyle = "#555";
-  ctx.lineWidth = 2;
-
-  nodes.forEach(node => {
-    if (!node.links) return;
-
-    node.links.forEach(linkId => {
-      const target = nodes.find(n => n.id === linkId);
-      if (!target) return;
-
-      ctx.beginPath();
-      ctx.moveTo(node.x + 20, node.y + 20);
-      ctx.lineTo(target.x + 20, target.y + 20);
-      ctx.stroke();
-    });
-  });
+function loop(timestamp) {
+  update(timestamp);
+  render();
+  requestAnimationFrame(loop);
 }
 
+function update(dt) {
+  updateCanvasTransition(dt);
+}
+
+function render() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw map background
+  ctx.fillStyle = "#111";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Draw nodes (placeholder)
+  ctx.fillStyle = "#fff";
+  ctx.beginPath();
+  ctx.arc(canvas.width / 2, canvas.height / 2, 20, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Draw canvas transitions on top
+  renderCanvasTransition(ctx);
+}
+
+// Example triggers for debugging or scripted events
+export function triggerGlitch() {
+  glitchFlashCanvas(150);
+}
+
+export function triggerStatic() {
+  staticBurstCanvas(200);
+}
+
+export function triggerCRTPulse() {
+  crtPulseCanvas(400);
+}
