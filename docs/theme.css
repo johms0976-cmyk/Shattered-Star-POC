@@ -1,93 +1,56 @@
-/* ----------------------------------------------------------
-   BASE THEME VARIABLES
----------------------------------------------------------- */
-
+/* =========================================================
+   THEME ROOT
+========================================================= */
 :root {
-  --accent: #00ccff;
-  --accent-soft: rgba(0, 204, 255, 0.4);
-
-  --bg-dark: #000000;
-  --bg-panel: #111111;
-  --bg-panel-alt: #0a0a0a;
-
-  --text-main: #00ccff;
-  --text-dim: #0088aa;
-
-  --border: #00ccff;
-  --border-soft: rgba(0, 204, 255, 0.4);
-
-  --glow: 0 0 12px #00ccff;
-  --glow-strong: 0 0 24px #00ccff;
-
-  --crt-strength: 0.15;
-  --glitch-frequency: 0.25;
-
-  --button-bg: #111;
-  --button-bg-hover: #003344;
-  --button-border: #00ccff;
-
-  --loading-bg: #003344;
-  --loading-fill: #00ccff;
-
-  --node-bg: #003344;
-  --node-border: #00ccff;
-
-  --combat-text: #00ccff;
-
-  transition:
-    --accent 1.2s ease,
-    --bg-dark 1.2s ease,
-    --glow 1.2s ease,
-    background 1.2s ease;
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --accent-color: #4cc6ff;
+  --panel-bg: rgba(255,255,255,0.05);
+  --panel-border: rgba(255,255,255,0.3);
 }
 
-/* ----------------------------------------------------------
-   VOIDBORN CORRUPTION THEME
----------------------------------------------------------- */
+/* =========================================================
+   COSMIC NOIR (DEFAULT)
+========================================================= */
+body[data-theme="default"] {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+  --accent-color: #4cc6ff;
+  --panel-bg: rgba(255,255,255,0.05);
+  --panel-border: rgba(255,255,255,0.3);
+}
 
+/* =========================================================
+   VOIDBORN CORRUPTION (ACT II+)
+========================================================= */
 body[data-theme="voidborn"] {
-  --accent: #b300ff;
-  --accent-soft: rgba(179, 0, 255, 0.4);
-
-  --bg-dark: #05000a;
-  --bg-panel: #12001a;
-  --bg-panel-alt: #0a0011;
-
-  --text-main: #d966ff;
-  --text-dim: #7a2ca3;
-
-  --border: #b300ff;
-  --border-soft: rgba(179, 0, 255, 0.4);
-
-  --glow: 0 0 14px #b300ff;
-  --glow-strong: 0 0 32px #d966ff;
-
-  --crt-strength: 0.25;
-  --glitch-frequency: 0.45;
-
-  --button-bg: #1a0022;
-  --button-bg-hover: #3a0055;
-  --button-border: #b300ff;
-
-  --loading-bg: #2a0040;
-  --loading-fill: #d966ff;
-
-  --node-bg: #2a0040;
-  --node-border: #b300ff;
-
-  --combat-text: #d966ff;
+  --bg-color: #0a0012;
+  --text-color: #e0d0ff;
+  --accent-color: #b300ff;
+  --panel-bg: rgba(179,0,255,0.15);
+  --panel-border: rgba(179,0,255,0.5);
 }
 
-/* ----------------------------------------------------------
-   CORRUPTION SPREAD ANIMATION
----------------------------------------------------------- */
-
-body.corrupting {
-  animation: corruptionPulse 1.5s ease forwards;
+/* =========================================================
+   GLOBAL APPLICATION OF THEME VARIABLES
+========================================================= */
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
 }
 
-@keyframes corruptionPulse {
-  0% { filter: brightness(1) saturate(1); }
-  50% { filter: brightness(0.6) saturate(2); }
-  100% { filter: brightness(1) saturate(1.4); }
+button {
+  border-color: var(--panel-border);
+  background: var(--panel-bg);
+  color: var(--text-color);
+}
+
+button:hover {
+  background: var(--accent-color);
+  color: black;
+}
+
+.screen h1,
+.screen h2 {
+  color: var(--text-color);
 }
