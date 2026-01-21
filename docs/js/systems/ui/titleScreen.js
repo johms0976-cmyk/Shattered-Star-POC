@@ -7,6 +7,7 @@ import { glitchFlash, fadeIn } from "../core/transitions.js";
 let initialized = false;
 let flickerInterval = null;
 let ambientGlitchInterval = null;
+let bgInterval = null;
 
 export function showTitle() {
   const screen = document.getElementById("title-screen");
@@ -18,6 +19,9 @@ export function showTitle() {
   fadeIn(600);
 
   if (!initialized) {
+    // Start the animated background loop
+    startTitleBackgroundAnimation();
+
     const goToStart = () => {
       glitchFlash(150, () => {
         clearIntervals();
@@ -40,6 +44,31 @@ export function showTitle() {
 
     initialized = true;
   }
+}
+
+/* ----------------------------------------------------------
+   TITLE BACKGROUND ANIMATION (1→2→3→4→5→4→3→2 loop)
+---------------------------------------------------------- */
+function startTitleBackgroundAnimation() {
+  const bg = document.getElementById("title-bg");
+
+  const frames = [
+    "assets/title/title1.png",
+    "assets/title/title2.png",
+    "assets/title/title3.png",
+    "assets/title/title4.png",
+    "assets/title/title5.png",
+    "assets/title/title4.png",
+    "assets/title/title3.png",
+    "assets/title/title2.png"
+  ];
+
+  let index = 0;
+
+  bgInterval = setInterval(() => {
+    bg.style.backgroundImage = `url(${frames[index]})`;
+    index = (index + 1) % frames.length;
+  }, 120); // adjust speed if needed
 }
 
 /* ----------------------------------------------------------
@@ -72,4 +101,5 @@ function startAmbientGlitch() {
 function clearIntervals() {
   if (flickerInterval) clearInterval(flickerInterval);
   if (ambientGlitchInterval) clearInterval(ambientGlitchInterval);
+  if (bgInterval) clearInterval(bgInterval);
 }
