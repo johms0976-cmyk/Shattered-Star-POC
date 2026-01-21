@@ -1,55 +1,17 @@
 // js/ui/newGame.js
 
-import { setState, STATE, GameState } from "../core/state.js";
-import { applyState } from "../core/stateRouter.js";
+import { setState, STATE } from "../core/state.js";
+import { fadeOutUI } from "../core/transitions.js";
 
 export function showNewGame() {
   const screen = document.getElementById("newgame-screen");
   screen.classList.add("active");
 
-  // Apply background image
-  screen.style.backgroundImage = "url('assets/screens/new-game/newgame1.png')";
-  screen.style.backgroundSize = "cover";
-  screen.style.backgroundPosition = "center";
-  screen.style.backgroundRepeat = "no-repeat";
+  const startBtn = document.getElementById("btn-start-run");
+  startBtn.onclick = () => startRun();
+}
 
-  // HERO SELECTION
-  const heroButtons = document.querySelectorAll(".hero-select");
-  heroButtons.forEach(btn => {
-    btn.onclick = () => {
-      heroButtons.forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-
-      // Save hero choice
-      GameState.run.hero = btn.dataset.hero;
-    };
-  });
-
-  // DIFFICULTY SELECTION
-  const diffButtons = document.querySelectorAll(".difficulty-select");
-  diffButtons.forEach(btn => {
-    btn.onclick = () => {
-      diffButtons.forEach(b => b.classList.remove("selected"));
-      btn.classList.add("selected");
-
-      // Save difficulty choice
-      GameState.run.difficulty = btn.dataset.difficulty;
-    };
-  });
-
-  // BEGIN RUN
-  const beginBtn = document.getElementById("begin-run");
-  if (beginBtn) {
-    beginBtn.onclick = () => {
-      // Default values if user didn't click anything
-      if (!GameState.run.hero) GameState.run.hero = "korvax";
-      if (!GameState.run.difficulty) GameState.run.difficulty = "normal";
-
-      // Start Act I intro
-      GameState.run.act = 1;
-
-      setState(STATE.ACT_INTRO);
-      applyState();
-    };
-  }
+async function startRun() {
+  await fadeOutUI(600);
+  setState(STATE.ACT_INTRO);
 }
