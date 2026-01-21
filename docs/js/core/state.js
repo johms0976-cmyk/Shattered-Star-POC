@@ -1,49 +1,60 @@
 // js/core/state.js
 
-// ------------------------------------------------------------
-// STATE ENUM
-// ------------------------------------------------------------
+// ============================================================
+// GAME STATE ENUM
+// ============================================================
+// These define every major UI/gameplay mode in Shattered Star.
+// LOADING → TITLE → START → SETTINGS → NEW_GAME → ACT_INTRO → MAP → COMBAT
+// ============================================================
+
 export const STATE = {
-  LOADING: "loading",
-  TITLE: "title",
-  START: "start",
-  NEW_GAME: "new_game",
-  SETTINGS: "settings",
-  ACT_INTRO: "act_intro",
-  MAP: "map",
-  COMBAT: "combat"
+  LOADING: 0,
+  TITLE: 1,
+  START: 2,
+  SETTINGS: 3,
+  NEW_GAME: 4,
+  ACT_INTRO: 5,
+  MAP: 6,
+  COMBAT: 7
 };
 
-// ------------------------------------------------------------
-// INTERNAL STATE
-// ------------------------------------------------------------
+// ============================================================
+// INTERNAL STATE TRACKING
+// ============================================================
+
 let currentState = STATE.LOADING;
-const listeners = [];
+let listeners = [];
 
-// ------------------------------------------------------------
-// SUBSCRIBE TO STATE CHANGES
-// ------------------------------------------------------------
-export function onStateChange(callback) {
-  listeners.push(callback);
-}
+// ============================================================
+// STATE TRANSITION FUNCTION
+// ============================================================
 
-// ------------------------------------------------------------
-// SET STATE
-// ------------------------------------------------------------
 export function setState(newState) {
   if (newState === currentState) return;
+
+  if (!Object.values(STATE).includes(newState)) {
+    console.warn("Attempted to switch to invalid state:", newState);
+    return;
+  }
 
   currentState = newState;
 
   // Notify all listeners
-  for (const fn of listeners) {
-    fn(newState);
-  }
+  listeners.forEach(fn => fn(newState));
 }
 
-// ------------------------------------------------------------
+// ============================================================
+// SUBSCRIBE TO STATE CHANGES
+// ============================================================
+
+export function onStateChange(callback) {
+  listeners.push(callback);
+}
+
+// ============================================================
 // GET CURRENT STATE (optional helper)
-// ------------------------------------------------------------
+// ============================================================
+
 export function getState() {
   return currentState;
 }
