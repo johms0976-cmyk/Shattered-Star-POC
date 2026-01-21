@@ -1,55 +1,37 @@
 /* =========================================================
-   GLOBAL RESET
+   CORE LAYOUT
 ========================================================= */
-* {
+
+html, body {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background: black;
-  color: white;
-  font-family: Arial, sans-serif;
+  width: 100%;
+  height: 100%;
+  background: #02030a;
+  color: #f5f5f5;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   overflow: hidden;
-  transition: background 0.4s ease, color 0.4s ease;
 }
 
-/* =========================================================
-   THEME SYSTEM
-========================================================= */
-body[data-theme="default"] {
-  --accent: #ffffff;
-  --bg-overlay: rgba(0, 0, 0, 0.4);
-}
-
-body[data-theme="voidborn"] {
-  --accent: #a100ff;
-  --bg-overlay: rgba(20, 0, 30, 0.6);
-  color: #d8b4ff;
-}
-
-/* =========================================================
-   SCREEN SYSTEM
-========================================================= */
 .screen {
   position: absolute;
   inset: 0;
   display: none;
-  opacity: 0;
-  transition: opacity 0.6s ease;
 }
 
 .screen.active {
   display: block;
-  opacity: 1;
 }
 
 /* =========================================================
-   TITLE SCREEN (CINEMATIC SLIDESHOW)
+   TITLE SCREEN BASE
 ========================================================= */
+
 #title-screen {
-  background: black;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(circle at 20% 0%, #1b1f3b 0%, #050612 55%, #000000 100%);
 }
 
 .title-bg {
@@ -57,220 +39,268 @@ body[data-theme="voidborn"] {
   inset: 0;
   background-size: cover;
   background-position: center;
-  opacity: 0;
   transition: opacity 1s ease;
+  opacity: 0;
 }
 
+/* Distortion overlay for corruption pulse */
+#title-distort {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* Title text */
 .title-text {
   position: absolute;
-  bottom: 5%;
-  width: 100%;
-  text-align: center;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8vh;
+  pointer-events: none;
 }
 
 .title-prompt {
-  font-size: 1.4rem;
-  opacity: 0.85;
-  letter-spacing: 2px;
-  text-shadow: 0 0 10px black;
+  font-size: 1.1rem;
+  letter-spacing: 0.35em;
+  text-indent: 0.35em;
+  color: rgba(240, 240, 255, 0.85);
+  text-shadow: 0 0 12px rgba(120, 180, 255, 0.7);
+  animation: promptPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes promptPulse {
+  0%   { opacity: 0.25; transform: translateY(0); }
+  50%  { opacity: 1;    transform: translateY(-2px); }
+  100% { opacity: 0.25; transform: translateY(0); }
 }
 
 /* =========================================================
    LOADING SCREEN
 ========================================================= */
+
 #loading-screen {
+  position: absolute;
+  inset: 0;
   display: flex;
-  justify-content: center;
   align-items: center;
-  flex-direction: column;
+  justify-content: center;
+  background: radial-gradient(circle at 10% 0%, #1b1f3b 0%, #050612 55%, #000000 100%);
 }
 
 .loading-container {
-  width: 300px;
   text-align: center;
 }
 
 .loading-text {
-  margin-top: 10px;
-  font-size: 1.2rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.2em;
+  text-indent: 0.2em;
+  color: rgba(220, 230, 255, 0.8);
 }
 
 .loading-bar {
-  width: 100%;
-  height: 6px;
-  background: rgba(255,255,255,0.2);
-  margin-top: 10px;
+  margin-top: 1rem;
+  width: 260px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
 }
 
 #loading-progress {
-  height: 100%;
   width: 0%;
-  background: var(--accent);
-}
-
-/* =========================================================
-   START SCREEN
-========================================================= */
-#start-screen {
-  background-size: cover;
-  background-position: center;
-  padding: 40px;
-}
-
-#start-screen h1 {
-  margin-bottom: 20px;
-  text-shadow: 0 0 10px black;
-}
-
-#start-screen button {
-  display: block;
-  width: 220px;
-  margin: 10px 0;
-  padding: 14px;
-  font-size: 1.2rem;
-  cursor: pointer;
-}
-
-/* =========================================================
-   SETTINGS SCREEN
-========================================================= */
-#settings-screen {
-  padding: 40px;
-}
-
-#settings-screen h1 {
-  margin-bottom: 20px;
-}
-
-#settings-screen button {
-  display: block;
-  margin: 10px 0;
-  padding: 12px;
-}
-
-/* =========================================================
-   NEW GAME SCREEN
-========================================================= */
-#newgame-screen {
-  background-size: cover;
-  background-position: center;
-  padding: 40px;
-}
-
-.section {
-  margin-bottom: 30px;
-}
-
-.hero-grid,
-.difficulty-grid {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.hero-select,
-.difficulty-select {
-  padding: 10px 16px;
-  cursor: pointer;
-  border: 2px solid var(--accent);
-  background: var(--bg-overlay);
-  transition: 0.2s;
-}
-
-.hero-select.selected,
-.difficulty-select.selected {
-  background: var(--accent);
-  color: black;
-}
-
-/* =========================================================
-   ACT INTRO (CINEMATIC TEXT CRAWL)
-========================================================= */
-#act-intro {
-  background: black;
-}
-
-.act-intro-text {
-  position: absolute;
-  top: 50%;
-  width: 100%;
-  text-align: center;
-  font-size: 1.6rem;
-  line-height: 1.6;
-  transform: translateY(40px);
-  opacity: 0;
-  white-space: pre-line;
-  text-shadow: 0 0 10px black;
-}
-
-/* =========================================================
-   MAP SCREEN
-========================================================= */
-#map-screen {
-  background: black;
-}
-
-#map-canvas {
-  width: 100%;
   height: 100%;
+  background: linear-gradient(90deg, #4fd1ff, #9f7aea);
+  transition: width 0.15s linear;
 }
 
 /* =========================================================
-   COMBAT SCREEN
+   VOIDBORN CORRUPTION PULSE
 ========================================================= */
-#combat-screen {
-  background: radial-gradient(circle at center, #1a1a1a, #000);
+
+@keyframes voidbornPulse {
+  0% {
+    filter: brightness(1) contrast(1) saturate(1);
+    transform: scale(1);
+  }
+  50% {
+    filter: brightness(1.15) contrast(1.25) saturate(1.4) hue-rotate(18deg);
+    transform: scale(1.012);
+  }
+  100% {
+    filter: brightness(1) contrast(1) saturate(1);
+    transform: scale(1);
+  }
 }
 
-.turn-order {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 1.4rem;
-  text-shadow: 0 0 10px black;
+@keyframes voidbornDistort {
+  0%   { opacity: 0; transform: translateX(0); }
+  92%  { opacity: 0; transform: translateX(0); }
+  93%  { opacity: 0.25; transform: translateX(-2px); }
+  94%  { opacity: 0.4; transform: translateX(2px); }
+  95%  { opacity: 0.15; transform: translateX(-1px); }
+  100% { opacity: 0; transform: translateX(0); }
 }
 
-.enemy-intent {
+.voidborn-pulse {
+  animation: voidbornPulse 6s ease-in-out infinite;
+}
+
+.voidborn-distort {
+  animation: voidbornDistort 6s infinite;
+}
+
+/* =========================================================
+   VOIDBORN TENDRILS (VEIN-LIKE CORRUPTION)
+========================================================= */
+
+.tendril-layer {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  mix-blend-mode: screen;
+}
+
+/* Left and right containers */
+.tendril {
+  position: absolute;
+  width: 22%;
+  height: 120%;
+  top: -10%;
+  background: radial-gradient(circle at 0% 50%, rgba(140, 60, 255, 0.0) 0%, rgba(140, 60, 255, 0.35) 35%, rgba(0, 0, 0, 0) 70%);
+  opacity: 0;
+  filter: blur(1.2px);
+}
+
+.tendril-left {
+  left: -18%;
+  transform-origin: right center;
+}
+
+.tendril-right {
+  right: -18%;
+  transform-origin: left center;
+}
+
+/* Inner vein strokes */
+.tendril::before,
+.tendril::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255, 180, 255, 0.0) 0%, rgba(255, 180, 255, 0.4) 6%, rgba(0, 0, 0, 0) 14%),
+    radial-gradient(circle at 40% 40%, rgba(180, 120, 255, 0.0) 0%, rgba(180, 120, 255, 0.45) 7%, rgba(0, 0, 0, 0) 16%),
+    radial-gradient(circle at 60% 70%, rgba(120, 220, 255, 0.0) 0%, rgba(120, 220, 255, 0.4) 5%, rgba(0, 0, 0, 0) 13%);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+
+/* Left tendril animation */
+@keyframes tendrilCreepLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-40%) scaleX(0.7) scaleY(0.9) skewX(-6deg);
+  }
+  40% {
+    opacity: 0.9;
+    transform: translateX(0%) scaleX(1) scaleY(1) skewX(-2deg);
+  }
+  70% {
+    opacity: 0.7;
+    transform: translateX(4%) scaleX(1.05) scaleY(1.02) skewX(1deg);
+  }
+  100% {
+    opacity: 0.0;
+    transform: translateX(10%) scaleX(1.1) scaleY(1.05) skewX(3deg);
+  }
+}
+
+/* Right tendril animation */
+@keyframes tendrilCreepRight {
+  0% {
+    opacity: 0;
+    transform: translateX(40%) scaleX(0.7) scaleY(0.9) skewX(6deg);
+  }
+  40% {
+    opacity: 0.9;
+    transform: translateX(0%) scaleX(1) scaleY(1) skewX(2deg);
+  }
+  70% {
+    opacity: 0.7;
+    transform: translateX(-4%) scaleX(1.05) scaleY(1.02) skewX(-1deg);
+  }
+  100% {
+    opacity: 0.0;
+    transform: translateX(-10%) scaleX(1.1) scaleY(1.05) skewX(-3deg);
+  }
+}
+
+.tendril-animate-left {
+  animation: tendrilCreepLeft 9s ease-in-out infinite;
+}
+
+.tendril-animate-right {
+  animation: tendrilCreepRight 11s ease-in-out infinite;
+}
+
+/* Subtle flicker overlay on tendrils */
+@keyframes tendrilFlicker {
+  0%, 92%, 100% { opacity: 1; }
+  93% { opacity: 0.4; }
+  95% { opacity: 0.8; }
+}
+
+.tendril::before {
+  animation: tendrilFlicker 7s infinite;
+}
+
+/* =========================================================
+   BASIC START / SETTINGS / OTHER SCREENS (MINIMAL)
+========================================================= */
+
+#start-screen,
+#settings-screen,
+#newgame-screen,
+#map-screen,
+#combat-screen,
+#act-intro {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 0%, #15182b 0%, #050612 55%, #000000 100%);
+  color: #f5f5f5;
+  padding: 3rem;
+  box-sizing: border-box;
+}
+
+#start-screen h1,
+#settings-screen h1,
+#newgame-screen h1 {
+  margin-top: 0;
+  letter-spacing: 0.25em;
+  text-indent: 0.25em;
   font-size: 1.2rem;
-  opacity: 0.8;
-  text-shadow: 0 0 10px black;
 }
 
-.card-row {
-  position: absolute;
-  bottom: 40px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-}
-
-.card-slot {
-  width: 120px;
-  height: 180px;
-  border: 2px solid var(--accent);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(255,255,255,0.05);
-  text-shadow: 0 0 10px black;
-}
-
-/* =========================================================
-   BUTTONS (GLOBAL)
-========================================================= */
 button {
-  background: rgba(255,255,255,0.1);
-  border: 2px solid var(--accent);
-  color: var(--accent);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #f5f5f5;
+  padding: 0.5rem 1.2rem;
+  margin: 0.25rem 0.5rem 0.25rem 0;
   cursor: pointer;
-  transition: 0.2s;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-indent: 0.12em;
 }
 
 button:hover {
-  background: var(--accent);
-  color: black;
+  background: rgba(255, 255, 255, 0.12);
 }
