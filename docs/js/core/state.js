@@ -1,20 +1,21 @@
 // js/core/state.js
 
 export const STATE = {
-  TITLE: "TITLE",
-  START: "START",
-  NEWGAME: "NEWGAME",
-  LOADING: "LOADING",   // <‑‑ NEW
-  MAP: "MAP",
-  COMBAT: "COMBAT"
+  LOADING: "loading",
+  TITLE: "title",
+  START: "start",
+  NEWGAME: "newgame",
+  SETTINGS: "settings",
+  ACT_INTRO: "act_intro",
+  MAP: "map",
+  COMBAT: "combat"
 };
 
 export const GameState = {
-  current: STATE.TITLE,
-
+  current: STATE.LOADING,
   run: {
     hero: null,
-    difficulty: "normal",
+    difficulty: null,
     act: 1
   }
 };
