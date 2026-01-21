@@ -1,6 +1,7 @@
 // js/systems/map/mapUI.js
 
-import { GameState } from "../../core/state.js";
+import { GameState, STATE, setState } from "../../core/state.js";
+import { applyState } from "../../core/stateRouter.js";
 import {
   createRenderer,
   registerScene,
@@ -19,11 +20,6 @@ export function showMap() {
 
   screen.classList.add("active");
 
-  if (!canvas) {
-    console.error("map-canvas not found");
-    return;
-  }
-
   if (!renderer) {
     renderer = createRenderer(canvas);
     registerScene(renderer, "map", drawMapScene);
@@ -36,31 +32,17 @@ export function showMap() {
   loop();
 }
 
-/* =========================
-   Render Loop
-========================= */
-
 function loop() {
   renderFrame(renderer, GameState);
   rafId = requestAnimationFrame(loop);
 }
 
 function stopLoop() {
-  if (rafId) {
-    cancelAnimationFrame(rafId);
-    rafId = null;
-  }
+  if (rafId) cancelAnimationFrame(rafId);
 }
 
-/* =========================
-   DOM Nodes
-========================= */
-
 function renderMapNodes(map) {
-  if (!map || !map.nodes) return;
-
   const container = document.getElementById("map-screen");
-
   container.querySelectorAll(".node").forEach(n => n.remove());
 
   map.nodes.forEach(node => {
@@ -72,7 +54,8 @@ function renderMapNodes(map) {
 
     el.onclick = () => {
       GameState.run.currentNode = node;
-      console.log("Node selected:", node);
+      setState(STATE.COMBAT);
+      applyState();
     };
 
     container.appendChild(el);
