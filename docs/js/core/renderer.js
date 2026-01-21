@@ -1,46 +1,68 @@
 // js/core/renderer.js
+import { renderTransition } from "./transitions.js";
 
-import { renderTransition } from './transitions.js';
+/**
+ * Renderer is a lightweight canvas loop.
+ * It does NOT handle navigation or screen state.
+ */
+export function createRenderer(canvas) {
+  const ctx = canvas.getContext("2d");
 
-export function initRenderer(ctx, state) {
   return {
+    canvas,
     ctx,
-    state,
     lastTime: performance.now(),
     delta: 0,
-    scenes: {},   // scene registry
+    scenes: {},      // scene registry
+    activeScene: null
   };
 }
 
-// Register a scene renderer from anywhere in the codebase
+/**
+ * Register a drawable scene (map, combat, effects, etc)
+ */
 export function registerScene(renderer, name, drawFn) {
   renderer.scenes[name] = drawFn;
 }
 
-export function renderFrame(renderer, state) {
+/**
+ * Switch the active canvas scene
+ */
+export function setScene(renderer, name) {
+  renderer.activeScene = name;
+}
+
+/**
+ * Main render loop
+ */
+export function renderFrame(renderer, gameState) {
   const now = performance.now();
   renderer.delta = now - renderer.lastTime;
   renderer.lastTime = now;
 
   const ctx = renderer.ctx;
-  const { width, height } = ctx.canvas;
+  const { width, height } = renderer.canvas;
 
-  // Clear screen
   ctx.clearRect(0, 0, width, height);
 
-  // Draw active scene
-  const scene = renderer.scenes[state.scene];
+  const scene = renderer.scenes[renderer.activeScene];
+
   if (scene) {
-    scene(ctx, state, renderer);
+    scene(ctx, gameState, renderer);
   } else {
-    // fallback if scene missing
-    ctx.fillStyle = 'black';
+    // Fallback debug screen
+    ctx.fillStyle = "black";
     ctx.fillRect(0, 0, width, height);
-    ctx.fillStyle = 'red';
-    ctx.font = '20px monospace';
-    ctx.fillText(`Missing scene: ${state.scene}`, 20, 40);
+    ctx.fillStyle = "red";
+    ctx.font = "20px monospace";
+    ctx.fillText(
+      renderer.activeScene
+        ? `Missing scene: ${renderer.activeScene}`
+        : "No active canvas scene",
+      20,
+      40
+    );
   }
 
-  // Draw transitions on top
   renderTransition(ctx);
 }
