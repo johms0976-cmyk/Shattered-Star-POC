@@ -3,7 +3,9 @@
 export const STATE = {
   TITLE: "title",
   START: "start",
-  MAP: "map"
+  NEWGAME: "newgame",
+  MAP: "map",
+  COMBAT: "combat"
 };
 
 export const GameState = {
