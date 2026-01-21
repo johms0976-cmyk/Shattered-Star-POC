@@ -110,8 +110,8 @@
     }
 
     .node.combat { background: #b33; }
-    .node.event { background: #338; color: white; }
-    .node.elite { background: gold; }
+    .node.event  { background: #338; color: white; }
+    .node.elite  { background: gold; }
   </style>
 </head>
 
@@ -132,11 +132,6 @@
   </div>
 </div>
 
-<!-- NEW GAME SCREEN -->
-<div id="newgame-screen" class="screen">
-  <img id="newgame-image" class="title-frame" src="assets/screens/new-game/newgame1.png">
-</div>
-
 <!-- MAP SCREEN -->
 <div id="map-screen" class="screen">
   <canvas id="map-canvas"></canvas>
@@ -148,131 +143,49 @@
 <!-- AUDIO -->
 <audio id="intro-audio" src="assets/audio/intro.ogg" preload="auto" loop></audio>
 
+<!-- =========================
+     TITLE ANIMATION (SAFE)
+========================= -->
 <script>
-/* ------------------------------
-   TITLE ANIMATION
------------------------------- */
-
-const frames = [
-  "assets/screens/title/title2.png",
-  "assets/screens/title/title3.png",
-  "assets/screens/title/title4.png",
-  "assets/screens/title/title5.png",
-  "assets/screens/title/title4.png",
-  "assets/screens/title/title3.png"
-];
-
-let frameIndex = 0;
-const titleImage = document.getElementById("title-image");
-
-function animateTitle() {
-  frameIndex = (frameIndex + 1) % frames.length;
-  titleImage.src = frames[frameIndex];
-  setTimeout(animateTitle, 150);
-}
-setTimeout(animateTitle, 150);
-
-/* ------------------------------
-   AUDIO
------------------------------- */
-
-const introAudio = document.getElementById("intro-audio");
-introAudio.volume = 0.7;
-
-function enableAudio() {
-  introAudio.play().catch(() => {});
-}
-window.addEventListener("click", enableAudio, { once: true });
-window.addEventListener("keydown", enableAudio, { once: true });
-
-/* ------------------------------
-   GLITCH TRANSITION
------------------------------- */
-
-function glitchTransition(fromId, toId) {
-  const glitch = document.getElementById("glitch");
-  glitch.style.animation = "none";
-  glitch.offsetHeight;
-  glitch.style.animation = "glitchFlash 0.35s linear";
-
-  setTimeout(() => {
-    document.getElementById(fromId).classList.remove("active");
-    document.getElementById(toId).classList.add("active");
-  }, 350);
-}
-
-/* ------------------------------
-   SCREEN FLOW
------------------------------- */
-
-function goToStart() {
-  glitchTransition("title-screen", "start-screen");
-}
-
-document.getElementById("press-enter").onclick = goToStart;
-window.addEventListener("keydown", e => {
-  if (e.key === "Enter") goToStart();
-});
-
-document.getElementById("new-game").onclick = () => {
-  glitchTransition("start-screen", "newgame-screen");
-
-  setTimeout(() => {
-    document.getElementById("newgame-image").style.filter =
-      "contrast(1.5) hue-rotate(20deg)";
-  }, 900);
-
-  setTimeout(() => {
-    glitchTransition("newgame-screen", "map-screen");
-    setTimeout(initMap, 400);
-  }, 1200);
-};
-
-/* ------------------------------
-   MAP (PLACEHOLDER, BRANCHING)
------------------------------- */
-
-function initMap() {
-  const canvas = document.getElementById("map-canvas");
-  const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  ctx.strokeStyle = "#555";
-  ctx.lineWidth = 2;
-
-  const nodes = [
-    { x: 200, y: 300, type: "combat" },
-    { x: 450, y: 200, type: "event" },
-    { x: 450, y: 400, type: "combat" },
-    { x: 700, y: 300, type: "elite" }
+  const frames = [
+    "assets/screens/title/title2.png",
+    "assets/screens/title/title3.png",
+    "assets/screens/title/title4.png",
+    "assets/screens/title/title5.png",
+    "assets/screens/title/title4.png",
+    "assets/screens/title/title3.png"
   ];
 
-  drawLine(ctx, nodes[0], nodes[1]);
-  drawLine(ctx, nodes[0], nodes[2]);
-  drawLine(ctx, nodes[1], nodes[3]);
-  drawLine(ctx, nodes[2], nodes[3]);
+  let frameIndex = 0;
+  const titleImage = document.getElementById("title-image");
 
-  nodes.forEach(n => createNode(n));
-}
-
-function drawLine(ctx, a, b) {
-  ctx.beginPath();
-  ctx.moveTo(a.x + 20, a.y + 20);
-  ctx.lineTo(b.x + 20, b.y + 20);
-  ctx.stroke();
-}
-
-function createNode(node) {
-  const el = document.createElement("div");
-  el.className = `node ${node.type}`;
-  el.style.left = node.x + "px";
-  el.style.top = node.y + "px";
-  el.innerText = node.type[0].toUpperCase();
-  el.onclick = () => alert(node.type.toUpperCase());
-  document.getElementById("map-screen").appendChild(el);
-}
+  function animateTitle() {
+    frameIndex = (frameIndex + 1) % frames.length;
+    titleImage.src = frames[frameIndex];
+    setTimeout(animateTitle, 150);
+  }
+  setTimeout(animateTitle, 150);
 </script>
+
+<!-- =========================
+     AUDIO ENABLE (SAFE)
+========================= -->
+<script>
+  const introAudio = document.getElementById("intro-audio");
+  introAudio.volume = 0.7;
+
+  function enableAudio() {
+    introAudio.play().catch(() => {});
+  }
+
+  window.addEventListener("click", enableAudio, { once: true });
+  window.addEventListener("keydown", enableAudio, { once: true });
+</script>
+
+<!-- =========================
+     BOOTSTRAP GAME
+========================= -->
+<script type="module" src="main.js"></script>
 
 </body>
 </html>
