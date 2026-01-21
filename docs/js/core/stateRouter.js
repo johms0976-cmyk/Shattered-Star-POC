@@ -6,6 +6,8 @@ import { showTitle } from "../ui/titleScreen.js";
 import { showStart } from "../ui/mainMenu.js";
 import { showNewGame } from "../ui/newGame.js";
 import { showLoading } from "../ui/loadingScreen.js";
+import { showSettings } from "../ui/settingsMenu.js";
+import { showActIntro } from "../ui/actIntro.js";
 
 import { showMap } from "../systems/map/mapUI.js";
 import { showCombat } from "../systems/combat/combatUI.js";
@@ -26,8 +28,16 @@ export function applyState() {
       showNewGame();
       break;
 
+    case STATE.SETTINGS:
+      showSettings();
+      break;
+
     case STATE.LOADING:
       showLoading();
+      break;
+
+    case STATE.ACT_INTRO:
+      showActIntro();
       break;
 
     case STATE.MAP:
@@ -44,6 +54,5 @@ export function applyState() {
 }
 
 function hideAllScreens() {
-  const screens = document.querySelectorAll(".screen");
-  screens.forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
 }
