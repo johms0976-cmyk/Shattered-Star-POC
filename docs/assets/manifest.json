@@ -1,11 +1,8 @@
 {
   "core": {
     "images": [
-      "assets/effects/corruption.png",
-      "assets/ui/title.png",
-      "assets/ui/logo.png",
 
-      "screens/title/title1.png",
+      "assets/screens/title/title1.png",
       "assets/screens/title/title2.png",
       "assets/screens/title/title3.png",
       "assets/screens/title/title4.png",
@@ -15,38 +12,7 @@
       "assets/screens/start/startscreen1.png"
     ],
     "audio": [
-      "assets/audio/ui-click.wav",
       "assets/audio/intro.ogg"
-    ],
-    "data": [
-      "data/enemies.json"
-    ]
-  },
-
-  "act1": {
-    "images": [
-      "assets/acts/act1/map-bg.png",
-      "assets/acts/act1/node-normal.png",
-      "assets/acts/act1/node-elite.png"
-    ],
-    "audio": [
-      "assets/audio/act1-theme.mp3"
-    ],
-    "data": [
-      "data/act1.json"
-    ]
-  },
-
-  "act2": {
-    "images": [
-      "assets/acts/act2/map-bg.png",
-      "assets/acts/act2/node-corrupted.png"
-    ],
-    "audio": [
-      "assets/audio/act2-theme.mp3"
-    ],
-    "data": [
-      "data/act2.json"
     ]
   }
 }
