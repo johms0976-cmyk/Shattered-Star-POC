@@ -1,44 +1,43 @@
-/* ----------------------------------------------------------
-   GLOBAL
----------------------------------------------------------- */
-body {
+/* =========================================================
+   GLOBAL RESET
+========================================================= */
+* {
   margin: 0;
-  background: black;
-  color: #00ccff;
-  font-family: "Courier New", monospace;
-  overflow: hidden;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Orbitron", sans-serif;
+  background: black;
+  color: white;
+}
+
+/* =========================================================
+   SCREEN SYSTEM
+========================================================= */
 .screen {
-  display: none;
   position: absolute;
   inset: 0;
-  padding: 40px;
+  display: none;
+  width: 100%;
+  height: 100%;
 }
 
 .screen.active {
-  display: block;
-}
-
-h1, h2, h3 {
-  margin: 0 0 20px 0;
-  text-align: center;
-}
-
-button {
-  cursor: pointer;
-  font-family: inherit;
-}
-
-/* ----------------------------------------------------------
-   TITLE SCREEN
----------------------------------------------------------- */
-#title-screen {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  text-align: center;
+  justify-content: center;
+}
+
+/* =========================================================
+   TITLE SCREEN
+========================================================= */
+#title-screen {
   position: relative;
   overflow: hidden;
 }
@@ -49,186 +48,159 @@ button {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: -1;
+  z-index: 0;
+}
+
+.title-text {
+  z-index: 2;
+  font-size: 4rem;
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 20px rgba(255,255,255,0.8);
 }
 
 #press-enter {
-  margin-top: 40px;
-  font-size: 1.4em;
-  transition: 0.1s;
+  z-index: 2;
+  margin-top: 20px;
+  opacity: 0.8;
+  font-size: 1.2rem;
+  animation: blink 1.4s infinite;
 }
 
-/* ----------------------------------------------------------
+@keyframes blink {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.2; }
+}
+
+/* =========================================================
    LOADING SCREEN
----------------------------------------------------------- */
+========================================================= */
 #loading-screen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+  background: black;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .loading-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-}
-
-.loading-text {
-  font-size: 1.4em;
-  letter-spacing: 4px;
-  opacity: 0.8;
 }
 
 .loading-spinner {
-  width: 60px;
-  height: 60px;
-  border: 6px solid #003344;
-  border-top-color: #00ccff;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #444;
+  border-top-color: white;
   border-radius: 50%;
-  animation: spin 0.9s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+  to { transform: rotate(360deg); }
 }
 
 .loading-bar {
   width: 300px;
-  height: 10px;
-  background: #003344;
-  border: 1px solid #00ccff;
+  height: 8px;
+  background: #222;
+  margin-top: 20px;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
 #loading-progress {
-  height: 100%;
   width: 0%;
-  background: #00ccff;
+  height: 100%;
+  background: white;
+  transition: width 0.2s linear;
 }
 
-/* ----------------------------------------------------------
+/* =========================================================
    START SCREEN
----------------------------------------------------------- */
+========================================================= */
 #start-screen {
-  text-align: center;
-  padding-top: 120px;
-}
-
-#new-game {
-  padding: 20px 40px;
-  font-size: 1.4em;
-  background: #00ccff;
-  color: black;
-  border: none;
-}
-
-/* ----------------------------------------------------------
-   NEW GAME SCREEN
----------------------------------------------------------- */
-#newgame-screen {
-  text-align: center;
-  padding-top: 60px;
-}
-
-.hero-grid, .difficulty-grid {
-  display: flex;
-  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   gap: 20px;
-  margin: 20px 0;
 }
 
-.hero-select, .difficulty-select {
-  padding: 15px 25px;
-  background: #111;
-  border: 2px solid #444;
-  color: #00ccff;
-  font-size: 1.1em;
+#start-screen button {
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid white;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#start-screen button:hover {
+  background: rgba(255,255,255,0.3);
+}
+
+/* =========================================================
+   NEW GAME SCREEN
+========================================================= */
+#newgame-screen {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  gap: 20px;
+}
+
+.section {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.hero-grid,
+.difficulty-grid {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.hero-select,
+.difficulty-select {
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid white;
+  cursor: pointer;
   transition: 0.2s;
 }
 
 .hero-select.selected,
 .difficulty-select.selected {
-  border-color: #00ccff;
-  background: #003344;
+  background: white;
+  color: black;
 }
 
 #begin-run {
-  margin-top: 40px;
-  padding: 20px 40px;
-  font-size: 1.4em;
-  background: #00ccff;
-  color: black;
-  border: none;
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  background: rgba(255,255,255,0.2);
+  border: 1px solid white;
+  cursor: pointer;
 }
 
-/* ----------------------------------------------------------
-   ACT I INTRO
----------------------------------------------------------- */
-#act1-intro {
-  position: fixed;
-  inset: 0;
-  background: black;
-  color: #00ccff;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 60px;
-  z-index: 20;
-}
-
-#act1-intro.active {
-  display: flex;
-}
-
-.intro-text h1 {
-  margin-bottom: 20px;
-}
-
-.intro-text .continue {
-  margin-top: 40px;
-  opacity: 0.7;
-  font-size: 1.1em;
-}
-
-/* ----------------------------------------------------------
+/* =========================================================
    MAP SCREEN
----------------------------------------------------------- */
+========================================================= */
 #map-screen {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
+  background: black;
 }
 
 #map-canvas {
-  position: absolute;
-  inset: 0;
   width: 100%;
   height: 100%;
 }
 
-.node {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: #003344;
-  border: 2px solid #00ccff;
-  color: #00ccff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-/* ----------------------------------------------------------
+/* =========================================================
    COMBAT SCREEN
----------------------------------------------------------- */
+========================================================= */
 #combat-screen {
-  text-align: center;
-  padding-top: 120px;
-  font-size: 1.6em;
+  background: black;
 }
