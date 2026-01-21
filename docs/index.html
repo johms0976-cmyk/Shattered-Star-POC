@@ -46,7 +46,6 @@
       overflow: hidden;
     }
 
-    /* Background animation container */
     #title-bg {
       position: absolute;
       inset: 0;
@@ -60,6 +59,41 @@
       margin-top: 40px;
       font-size: 1.4em;
       transition: 0.1s;
+    }
+
+    /* LOADING SCREEN */
+    #loading-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .loading-text {
+      font-size: 1.4em;
+      letter-spacing: 4px;
+      opacity: 0.8;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #003344;
+      border-top-color: #00ccff;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
     }
 
     /* START SCREEN */
@@ -188,6 +222,14 @@
     <div id="press-enter">PRESS ENTER</div>
   </div>
 
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen" class="screen">
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">LOADING...</div>
+    </div>
+  </div>
+
   <!-- START SCREEN -->
   <div id="start-screen" class="screen">
     <h1>START</h1>
@@ -220,7 +262,7 @@
     <button id="begin-run">Begin Run</button>
   </div>
 
-  <!-- ACT I INTRO OVERLAY -->
+  <!-- ACT I INTRO -->
   <div id="act1-intro"></div>
 
   <!-- MAP SCREEN -->
@@ -231,19 +273,20 @@
   <!-- COMBAT SCREEN -->
   <div id="combat-screen" class="screen"></div>
 
-  <!-- CORE ENGINE SCRIPTS -->
+  <!-- CORE ENGINE -->
   <script type="module" src="js/core/state.js"></script>
   <script type="module" src="js/core/stateRouter.js"></script>
   <script type="module" src="js/core/renderer.js"></script>
   <script type="module" src="js/core/transitions.js"></script>
   <script type="module" src="js/core/crt.js"></script>
 
-  <!-- UI SCRIPTS -->
+  <!-- UI -->
   <script type="module" src="js/ui/titleScreen.js"></script>
   <script type="module" src="js/ui/mainMenu.js"></script>
   <script type="module" src="js/ui/newGame.js"></script>
+  <script type="module" src="js/ui/loadingScreen.js"></script>
 
-  <!-- SYSTEM SCRIPTS -->
+  <!-- SYSTEMS -->
   <script type="module" src="js/systems/map/mapUI.js"></script>
   <script type="module" src="js/systems/map/mapCanvasScene.js"></script>
   <script type="module" src="js/systems/map/mapGenerator.js"></script>
