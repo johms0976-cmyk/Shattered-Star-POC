@@ -2,27 +2,32 @@
 
 import { setState, STATE } from "../core/state.js";
 import { applyState } from "../core/stateRouter.js";
-import { glitchFlash, fadeIn } from "../core/transitions.js";
-
-let initialized = false;
 
 export function showStart() {
   const screen = document.getElementById("start-screen");
   screen.classList.add("active");
 
-  // Smooth fade-in when the Start screen appears
-  fadeIn(600);
+  // Apply background image
+  screen.style.backgroundImage = "url('assets/screens/start/startscreen1.png')";
+  screen.style.backgroundSize = "cover";
+  screen.style.backgroundPosition = "center";
+  screen.style.backgroundRepeat = "no-repeat";
 
-  if (initialized) return;
-
+  // NEW GAME button
   const newGameBtn = document.getElementById("new-game");
-
-  newGameBtn.onclick = () => {
-    glitchFlash(150, () => {
+  if (newGameBtn) {
+    newGameBtn.onclick = () => {
       setState(STATE.NEWGAME);
       applyState();
-    });
-  };
+    };
+  }
 
-  initialized = true;
+  // SETTINGS button
+  const settingsBtn = document.getElementById("open-settings");
+  if (settingsBtn) {
+    settingsBtn.onclick = () => {
+      setState(STATE.SETTINGS);
+      applyState();
+    };
+  }
 }
