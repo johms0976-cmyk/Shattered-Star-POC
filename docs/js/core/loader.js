@@ -2,11 +2,15 @@
 
 import { ASSET_MANIFEST } from "../../assets/manifest.js";
 
-export const LoadedAssets = {};
-
 export function preloadAssets(onProgress) {
-  let loaded = 0;
   const total = ASSET_MANIFEST.length;
+
+  if (total === 0) {
+    if (onProgress) onProgress(1);
+    return Promise.resolve();
+  }
+
+  let loaded = 0;
 
   return new Promise(resolve => {
     ASSET_MANIFEST.forEach(path => {
@@ -14,11 +18,8 @@ export function preloadAssets(onProgress) {
       img.src = path;
 
       img.onload = () => {
-        LoadedAssets[path] = img;
         loaded++;
-
         if (onProgress) onProgress(loaded / total);
-
         if (loaded === total) resolve();
       };
 
