@@ -7,31 +7,22 @@ import { showTitle } from "./js/ui/titleScreen.js";
 import { showStartScreen } from "./js/ui/startScreen.js";
 import { showNewGameScreen } from "./js/ui/newGameScreen.js";
 import { showMapScreen } from "./js/ui/mapScreen.js";
-
-
-// ------------------------------------------------------------
-// INITIAL BOOT
-// ------------------------------------------------------------
-window.addEventListener("DOMContentLoaded", async () => {
-  // Start with loading screen
-  setState(STATE.LOADING);
-
-  await preloadAllAssets(
-    stage => updateLoadingStage(stage),
-    progress => updateLoadingProgress(progress)
-  );
-
-  // After loading, go to title
-  setState(STATE.TITLE);
-});
+import { showSettingsMenu } from "./js/ui/settingsMenu.js";
+import { showActIntro } from "./js/ui/actIntro.js";
+import { showCombatUI } from "./js/ui/combatUI.js";
 
 // ------------------------------------------------------------
-// STATE ROUTER
+// STATE ROUTER — MUST BE REGISTERED BEFORE ANY STATE CHANGES
 // ------------------------------------------------------------
 onStateChange(newState => {
   hideAllScreens();
 
   switch (newState) {
+
+    case STATE.LOADING:
+      showScreen("loading-screen");
+      break;
+
     case STATE.TITLE:
       showScreen("title-screen");
       showTitle();
@@ -42,9 +33,19 @@ onStateChange(newState => {
       showStartScreen();
       break;
 
+    case STATE.SETTINGS:
+      showScreen("settings-screen");
+      showSettingsMenu();
+      break;
+
     case STATE.NEW_GAME:
       showScreen("newgame-screen");
       showNewGameScreen();
+      break;
+
+    case STATE.ACT_INTRO:
+      showScreen("act-intro");
+      showActIntro();
       break;
 
     case STATE.MAP:
@@ -54,19 +55,27 @@ onStateChange(newState => {
 
     case STATE.COMBAT:
       showScreen("combat-screen");
-      // combat screen module goes here
-      break;
-
-    case STATE.SETTINGS:
-      showScreen("settings-screen");
-      // settings screen module goes here
-      break;
-
-    case STATE.ACT_INTRO:
-      showScreen("act-intro");
-      // act intro module goes here
+      showCombatUI();
       break;
   }
+});
+
+// ------------------------------------------------------------
+// INITIAL BOOT — MUST COME AFTER ROUTER
+// ------------------------------------------------------------
+window.addEventListener("DOMContentLoaded", async () => {
+
+  // Enter loading state
+  setState(STATE.LOADING);
+
+  // Preload assets
+  await preloadAllAssets(
+    stage => updateLoadingStage(stage),
+    progress => updateLoadingProgress(progress)
+  );
+
+  // Move to title screen
+  setState(STATE.TITLE);
 });
 
 // ------------------------------------------------------------
@@ -77,7 +86,8 @@ function hideAllScreens() {
 }
 
 function showScreen(id) {
-  document.getElementById(id).classList.add("active");
+  const el = document.getElementById(id);
+  if (el) el.classList.add("active");
 }
 
 // ------------------------------------------------------------
