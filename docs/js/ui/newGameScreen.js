@@ -7,49 +7,35 @@ let selectedHero = "korvax";
 let selectedDifficulty = "normal";
 
 export function showNewGameScreen() {
-  const screen = document.getElementById("newgame-screen");
-  screen.classList.add("active");
-
   const heroButtons = document.querySelectorAll(".hero-select");
   const difficultyButtons = document.querySelectorAll(".difficulty-select");
   const beginBtn = document.getElementById("begin-run");
 
+  // HERO SELECTION
   heroButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
+    btn.onclick = () => {
       selectedHero = btn.dataset.hero;
-      updateHeroSelection(heroButtons, btn);
-    });
+
+      heroButtons.forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+    };
   });
 
+  // DIFFICULTY SELECTION
   difficultyButtons.forEach(btn => {
-    btn.addEventListener("click", () => {
+    btn.onclick = () => {
       selectedDifficulty = btn.dataset.difficulty;
-      updateDifficultySelection(difficultyButtons, btn);
-    });
+
+      difficultyButtons.forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+    };
   });
 
-  beginBtn.addEventListener("click", () => {
-    beginRun();
-  });
-}
+  // BEGIN RUN
+  beginBtn.onclick = async () => {
+    console.log("Starting run with:", selectedHero, selectedDifficulty);
 
-function updateHeroSelection(all, selected) {
-  all.forEach(btn => btn.classList.remove("selected"));
-  selected.classList.add("selected");
-}
-
-function updateDifficultySelection(all, selected) {
-  all.forEach(btn => btn.classList.remove("selected"));
-  selected.classList.add("selected");
-}
-
-async function beginRun() {
-  // Store hero + difficulty in global game state
-  window.gameConfig = {
-    hero: selectedHero,
-    difficulty: selectedDifficulty
+    await fadeOutUI(600);
+    setState(STATE.ACT_INTRO);
   };
-
-  await fadeOutUI(600);
-  setState(STATE.ACT_INTRO);
 }
