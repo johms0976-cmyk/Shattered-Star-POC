@@ -16,6 +16,10 @@ export function applyState() {
   hideAllScreens();
 
   switch (GameState.current) {
+    case STATE.LOADING:
+      showLoading();
+      break;
+
     case STATE.TITLE:
       showTitle();
       break;
@@ -30,10 +34,6 @@ export function applyState() {
 
     case STATE.SETTINGS:
       showSettings();
-      break;
-
-    case STATE.LOADING:
-      showLoading();
       break;
 
     case STATE.ACT_INTRO:
