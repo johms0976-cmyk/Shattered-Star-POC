@@ -1,6 +1,6 @@
-/* =========================================================
+/* -----------------------------------------
    GLOBAL RESET
-========================================================= */
+----------------------------------------- */
 * {
   margin: 0;
   padding: 0;
@@ -10,87 +10,93 @@
 html, body {
   width: 100%;
   height: 100%;
-  overflow: hidden;
-  font-family: "Orbitron", sans-serif;
   background: black;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
   color: white;
 }
 
-/* =========================================================
-   SCREEN SYSTEM
-========================================================= */
+/* -----------------------------------------
+   SCREEN BASE
+----------------------------------------- */
 .screen {
   position: absolute;
   inset: 0;
-  display: none;
   width: 100%;
   height: 100%;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.6s ease;
 }
 
 .screen.active {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  opacity: 1;
 }
 
-/* =========================================================
-   TITLE SCREEN
-========================================================= */
-#title-screen {
-  position: relative;
-  overflow: hidden;
-}
-
-#title-bg {
+/* -----------------------------------------
+   TITLE SCREEN (CINEMATIC SLIDESHOW)
+----------------------------------------- */
+.title-bg {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 0;
+  opacity: 0;
+  transition: opacity 1s ease;
 }
+
+#title-bg-a { z-index: 1; }
+#title-bg-b { z-index: 2; }
 
 .title-text {
-  z-index: 2;
+  position: absolute;
+  bottom: 12%;
+  width: 100%;
+  text-align: center;
+  z-index: 3;
+  text-shadow: 0 0 12px rgba(0,0,0,0.9);
+}
+
+.title-logo {
   font-size: 4rem;
-  letter-spacing: 0.2em;
-  text-shadow: 0 0 20px rgba(255,255,255,0.8);
+  letter-spacing: 4px;
 }
 
-#press-enter {
-  z-index: 2;
-  margin-top: 20px;
-  opacity: 0.8;
-  font-size: 1.2rem;
-  animation: blink 1.4s infinite;
+.title-prompt {
+  margin-top: 1rem;
+  font-size: 1.4rem;
+  opacity: 0.85;
+  animation: pulse 1.8s infinite ease-in-out;
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 0.2; }
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
 }
 
-/* =========================================================
+/* -----------------------------------------
    LOADING SCREEN
-========================================================= */
-#loading-screen {
-  background: black;
-  flex-direction: column;
-  gap: 20px;
-}
-
+----------------------------------------- */
 .loading-container {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
+  gap: 20px;
 }
 
 .loading-spinner {
   width: 40px;
   height: 40px;
   border: 4px solid #444;
-  border-top-color: white;
+  border-top-color: #6cf;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -99,108 +105,95 @@ html, body {
   to { transform: rotate(360deg); }
 }
 
+.loading-text {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
 .loading-bar {
-  width: 300px;
-  height: 8px;
-  background: #222;
-  margin-top: 20px;
-  border-radius: 4px;
+  width: 60%;
+  height: 20px;
+  background: #333;
+  border-radius: 10px;
   overflow: hidden;
 }
 
 #loading-progress {
   width: 0%;
   height: 100%;
-  background: white;
-  transition: width 0.2s linear;
+  background: #6cf;
+  transition: width 0.1s linear;
 }
 
-/* =========================================================
+/* -----------------------------------------
    START SCREEN
-========================================================= */
+----------------------------------------- */
 #start-screen {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  gap: 20px;
+  text-align: center;
+  padding-top: 20%;
 }
 
 #start-screen button {
+  display: block;
+  margin: 10px auto;
   padding: 12px 24px;
   font-size: 1.2rem;
   background: rgba(255,255,255,0.1);
-  border: 1px solid white;
+  border: 2px solid white;
   color: white;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.3s;
 }
 
 #start-screen button:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.25);
 }
 
-/* =========================================================
+/* -----------------------------------------
+   SETTINGS SCREEN
+----------------------------------------- */
+#settings-screen {
+  text-align: center;
+  padding-top: 10%;
+}
+
+#settings-screen button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+}
+
+/* -----------------------------------------
    NEW GAME SCREEN
-========================================================= */
+----------------------------------------- */
 #newgame-screen {
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  gap: 20px;
-}
-
-.section {
-  margin: 20px 0;
+  padding: 40px;
   text-align: center;
 }
 
-.hero-grid,
-.difficulty-grid {
+.hero-grid, .difficulty-grid {
   display: flex;
-  gap: 12px;
   justify-content: center;
-  margin-top: 10px;
+  gap: 10px;
+  margin: 10px 0 20px;
 }
 
-.hero-select,
-.difficulty-select {
+.hero-select, .difficulty-select {
   padding: 10px 20px;
+  border: 2px solid white;
   background: rgba(255,255,255,0.1);
-  border: 1px solid white;
+  color: white;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.hero-select.selected,
 .difficulty-select.selected {
-  background: white;
-  color: black;
+  background: rgba(255,255,255,0.3);
 }
 
-#begin-run {
-  margin-top: 20px;
-  padding: 12px 24px;
-  font-size: 1.2rem;
-  background: rgba(255,255,255,0.2);
-  border: 1px solid white;
-  cursor: pointer;
-}
-
-/* =========================================================
-   MAP SCREEN
-========================================================= */
-#map-screen {
-  background: black;
-}
-
+/* -----------------------------------------
+   MAP + COMBAT SCREENS
+----------------------------------------- */
 #map-canvas {
   width: 100%;
   height: 100%;
-}
-
-/* =========================================================
-   COMBAT SCREEN
-========================================================= */
-#combat-screen {
-  background: black;
 }
