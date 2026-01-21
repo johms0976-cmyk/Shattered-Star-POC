@@ -1,29 +1,25 @@
-/* -----------------------------------------
+/* =========================================================
    GLOBAL RESET
------------------------------------------ */
+========================================================= */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
+body {
   background: black;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
   color: white;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
 }
 
-/* -----------------------------------------
-   SCREEN BASE
------------------------------------------ */
+/* =========================================================
+   SCREEN SYSTEM
+========================================================= */
 .screen {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
   display: none;
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -34,166 +30,165 @@ html, body {
   opacity: 1;
 }
 
-/* -----------------------------------------
-   TITLE SCREEN (CINEMATIC SLIDESHOW)
------------------------------------------ */
+/* =========================================================
+   TITLE SCREEN
+========================================================= */
+#title-screen {
+  background: black;
+}
+
 .title-bg {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
   opacity: 0;
   transition: opacity 1s ease;
 }
 
-#title-bg-a { z-index: 1; }
-#title-bg-b { z-index: 2; }
-
 .title-text {
   position: absolute;
-  bottom: 12%;
+  bottom: 5%;
   width: 100%;
   text-align: center;
-  z-index: 3;
-  text-shadow: 0 0 12px rgba(0,0,0,0.9);
-}
-
-.title-logo {
-  font-size: 4rem;
-  letter-spacing: 4px;
 }
 
 .title-prompt {
-  margin-top: 1rem;
   font-size: 1.4rem;
-  opacity: 0.85;
-  animation: pulse 1.8s infinite ease-in-out;
+  opacity: 0.8;
+  letter-spacing: 2px;
 }
 
-@keyframes pulse {
-  0% { opacity: 0.4; }
-  50% { opacity: 1; }
-  100% { opacity: 0.4; }
-}
-
-/* -----------------------------------------
+/* =========================================================
    LOADING SCREEN
------------------------------------------ */
-.loading-container {
-  position: absolute;
-  inset: 0;
+========================================================= */
+#loading-screen {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  flex-direction: column;
 }
 
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #444;
-  border-top-color: #6cf;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.loading-text {
-  font-size: 1.2rem;
-  opacity: 0.8;
+.loading-container {
+  width: 300px;
+  text-align: center;
 }
 
 .loading-bar {
-  width: 60%;
-  height: 20px;
-  background: #333;
-  border-radius: 10px;
-  overflow: hidden;
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.2);
+  margin-top: 10px;
 }
 
 #loading-progress {
-  width: 0%;
   height: 100%;
-  background: #6cf;
-  transition: width 0.1s linear;
+  width: 0%;
+  background: white;
 }
 
-/* -----------------------------------------
+/* =========================================================
    START SCREEN
------------------------------------------ */
+========================================================= */
 #start-screen {
-  text-align: center;
-  padding-top: 20%;
+  background-image: url("assets/screens/start/startscreen1.png");
+  background-size: cover;
+  background-position: center;
+  padding: 40px;
+}
+
+#start-screen h1 {
+  margin-bottom: 20px;
 }
 
 #start-screen button {
   display: block;
-  margin: 10px auto;
-  padding: 12px 24px;
+  width: 200px;
+  margin: 10px 0;
+  padding: 12px;
   font-size: 1.2rem;
-  background: rgba(255,255,255,0.1);
-  border: 2px solid white;
-  color: white;
   cursor: pointer;
-  transition: background 0.3s;
 }
 
-#start-screen button:hover {
-  background: rgba(255,255,255,0.25);
-}
-
-/* -----------------------------------------
+/* =========================================================
    SETTINGS SCREEN
------------------------------------------ */
+========================================================= */
 #settings-screen {
-  text-align: center;
-  padding-top: 10%;
+  padding: 40px;
 }
 
 #settings-screen button {
-  margin: 10px;
-  padding: 10px 20px;
-  font-size: 1.1rem;
+  display: block;
+  margin: 10px 0;
+  padding: 12px;
 }
 
-/* -----------------------------------------
+/* =========================================================
    NEW GAME SCREEN
------------------------------------------ */
+========================================================= */
 #newgame-screen {
+  background-image: url("assets/screens/new-game/newgame1.png");
+  background-size: cover;
+  background-position: center;
   padding: 40px;
-  text-align: center;
 }
 
-.hero-grid, .difficulty-grid {
+.section {
+  margin-bottom: 30px;
+}
+
+.hero-grid,
+.difficulty-grid {
   display: flex;
-  justify-content: center;
   gap: 10px;
-  margin: 10px 0 20px;
+  flex-wrap: wrap;
 }
 
-.hero-select, .difficulty-select {
-  padding: 10px 20px;
-  border: 2px solid white;
-  background: rgba(255,255,255,0.1);
-  color: white;
+.hero-select,
+.difficulty-select {
+  padding: 10px 16px;
   cursor: pointer;
+  border: 2px solid white;
+  background: rgba(0,0,0,0.4);
 }
 
+.hero-select.selected,
 .difficulty-select.selected {
-  background: rgba(255,255,255,0.3);
+  background: white;
+  color: black;
 }
 
-/* -----------------------------------------
-   MAP + COMBAT SCREENS
------------------------------------------ */
+/* =========================================================
+   MAP SCREEN
+========================================================= */
+#map-screen {
+  background: black;
+}
+
 #map-canvas {
   width: 100%;
   height: 100%;
+}
+
+/* =========================================================
+   COMBAT SCREEN
+========================================================= */
+#combat-screen {
+  background: black;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+button {
+  background: rgba(255,255,255,0.1);
+  border: 2px solid white;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: white;
+  color: black;
 }
