@@ -35,13 +35,25 @@
       font-family: inherit;
     }
 
-    /* Title Screen */
+    /* TITLE SCREEN */
     #title-screen {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background animation container */
+    #title-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: -1;
     }
 
     #press-enter {
@@ -50,7 +62,7 @@
       transition: 0.1s;
     }
 
-    /* Start Screen */
+    /* START SCREEN */
     #start-screen {
       text-align: center;
       padding-top: 120px;
@@ -64,7 +76,7 @@
       border: none;
     }
 
-    /* New Game Screen */
+    /* NEW GAME SCREEN */
     #newgame-screen {
       text-align: center;
       padding-top: 60px;
@@ -101,7 +113,7 @@
       border: none;
     }
 
-    /* Act I Intro */
+    /* ACT I INTRO */
     #act1-intro {
       position: fixed;
       inset: 0;
@@ -112,6 +124,7 @@
       align-items: center;
       text-align: center;
       padding: 60px;
+      z-index: 20;
     }
 
     #act1-intro.active {
@@ -128,7 +141,7 @@
       font-size: 1.1em;
     }
 
-    /* Map Screen */
+    /* MAP SCREEN */
     #map-screen {
       position: absolute;
       inset: 0;
@@ -157,7 +170,7 @@
       font-weight: bold;
     }
 
-    /* Combat Screen */
+    /* COMBAT SCREEN */
     #combat-screen {
       text-align: center;
       padding-top: 120px;
@@ -170,6 +183,7 @@
 
   <!-- TITLE SCREEN -->
   <div id="title-screen" class="screen">
+    <div id="title-bg"></div>
     <h1>SHATTERED STAR</h1>
     <div id="press-enter">PRESS ENTER</div>
   </div>
@@ -245,7 +259,6 @@
     import { setState, STATE } from "./js/core/state.js";
     import { applyState } from "./js/core/stateRouter.js";
 
-    // Start at title screen
     setState(STATE.TITLE);
     applyState();
   </script>
