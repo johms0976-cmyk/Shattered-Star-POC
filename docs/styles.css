@@ -12,6 +12,21 @@ body {
   color: white;
   font-family: Arial, sans-serif;
   overflow: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* =========================================================
+   THEME SYSTEM
+========================================================= */
+body[data-theme="default"] {
+  --accent: #ffffff;
+  --bg-overlay: rgba(0, 0, 0, 0.4);
+}
+
+body[data-theme="voidborn"] {
+  --accent: #a100ff;
+  --bg-overlay: rgba(20, 0, 30, 0.6);
+  color: #d8b4ff;
 }
 
 /* =========================================================
@@ -31,7 +46,7 @@ body {
 }
 
 /* =========================================================
-   TITLE SCREEN
+   TITLE SCREEN (CINEMATIC SLIDESHOW)
 ========================================================= */
 #title-screen {
   background: black;
@@ -55,8 +70,9 @@ body {
 
 .title-prompt {
   font-size: 1.4rem;
-  opacity: 0.8;
+  opacity: 0.85;
   letter-spacing: 2px;
+  text-shadow: 0 0 10px black;
 }
 
 /* =========================================================
@@ -74,6 +90,11 @@ body {
   text-align: center;
 }
 
+.loading-text {
+  margin-top: 10px;
+  font-size: 1.2rem;
+}
+
 .loading-bar {
   width: 100%;
   height: 6px;
@@ -84,14 +105,13 @@ body {
 #loading-progress {
   height: 100%;
   width: 0%;
-  background: white;
+  background: var(--accent);
 }
 
 /* =========================================================
    START SCREEN
 ========================================================= */
 #start-screen {
-  background-image: url("assets/screens/start/startscreen1.png");
   background-size: cover;
   background-position: center;
   padding: 40px;
@@ -99,13 +119,14 @@ body {
 
 #start-screen h1 {
   margin-bottom: 20px;
+  text-shadow: 0 0 10px black;
 }
 
 #start-screen button {
   display: block;
-  width: 200px;
+  width: 220px;
   margin: 10px 0;
-  padding: 12px;
+  padding: 14px;
   font-size: 1.2rem;
   cursor: pointer;
 }
@@ -115,6 +136,10 @@ body {
 ========================================================= */
 #settings-screen {
   padding: 40px;
+}
+
+#settings-screen h1 {
+  margin-bottom: 20px;
 }
 
 #settings-screen button {
@@ -127,7 +152,6 @@ body {
    NEW GAME SCREEN
 ========================================================= */
 #newgame-screen {
-  background-image: url("assets/screens/new-game/newgame1.png");
   background-size: cover;
   background-position: center;
   padding: 40px;
@@ -148,14 +172,35 @@ body {
 .difficulty-select {
   padding: 10px 16px;
   cursor: pointer;
-  border: 2px solid white;
-  background: rgba(0,0,0,0.4);
+  border: 2px solid var(--accent);
+  background: var(--bg-overlay);
+  transition: 0.2s;
 }
 
 .hero-select.selected,
 .difficulty-select.selected {
-  background: white;
+  background: var(--accent);
   color: black;
+}
+
+/* =========================================================
+   ACT INTRO (CINEMATIC TEXT CRAWL)
+========================================================= */
+#act-intro {
+  background: black;
+}
+
+.act-intro-text {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  text-align: center;
+  font-size: 1.6rem;
+  line-height: 1.6;
+  transform: translateY(40px);
+  opacity: 0;
+  white-space: pre-line;
+  text-shadow: 0 0 10px black;
 }
 
 /* =========================================================
@@ -174,21 +219,58 @@ body {
    COMBAT SCREEN
 ========================================================= */
 #combat-screen {
-  background: black;
+  background: radial-gradient(circle at center, #1a1a1a, #000);
+}
+
+.turn-order {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 1.4rem;
+  text-shadow: 0 0 10px black;
+}
+
+.enemy-intent {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 1.2rem;
+  opacity: 0.8;
+  text-shadow: 0 0 10px black;
+}
+
+.card-row {
+  position: absolute;
+  bottom: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.card-slot {
+  width: 120px;
+  height: 180px;
+  border: 2px solid var(--accent);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255,255,255,0.05);
+  text-shadow: 0 0 10px black;
 }
 
 /* =========================================================
-   BUTTONS
+   BUTTONS (GLOBAL)
 ========================================================= */
 button {
   background: rgba(255,255,255,0.1);
-  border: 2px solid white;
-  color: white;
+  border: 2px solid var(--accent);
+  color: var(--accent);
   cursor: pointer;
   transition: 0.2s;
 }
 
 button:hover {
-  background: white;
+  background: var(--accent);
   color: black;
 }
