@@ -22,11 +22,11 @@ const ENABLE_TENDRILS = true;
 
 // Title images
 const TITLE_IMAGES = [
-  assetPath("assets/title/title1.png"),
-  assetPath("assets/title/title2.png"),
-  assetPath("assets/title/title3.png"),
-  assetPath("assets/title/title4.png"),
-  assetPath("assets/title/title5.png")
+  assetPath("assets/screens/title/title1.png"),
+  assetPath("assets/screens/title/title2.png"),
+  assetPath("assets/screens/title/title3.png"),
+  assetPath("assets/screens/title/title4.png"),
+  assetPath("assets/screens/title/title5.png")
 ];
 
 // ============================================================
