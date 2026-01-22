@@ -2,17 +2,17 @@
   "core": {
     "images": [
 
-      "screens/title/title1.png",
-      "screens/title/title2.png",
-      "screens/title/title3.png",
-      "screens/title/title4.png",
-      "screens/title/title5.png",
+      "assets/screens/title/title1.png",
+      "assets/screens/title/title2.png",
+      "assets/screens/title/title3.png",
+      "assets/screens/title/title4.png",
+      "assets/screens/title/title5.png",
 
-      "screens/new-game/newgame1.png",
-      "screens/start/startscreen1.png"
+      "assets/screens/new-game/newgame1.png",
+      "assets/screens/start/startscreen1.png"
     ],
     "audio": [
-      "audio/intro.mp3"
+      "assets/audio/intro.mp3"
     ]
   }
 }
