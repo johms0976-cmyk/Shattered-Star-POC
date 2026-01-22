@@ -57,6 +57,12 @@ export function showActIntro() {
     setState(STATE.MAP);
   };
 
+  // ------------------------------------------------------------
+  // Remove old listeners before adding new ones
+  // ------------------------------------------------------------
+  window.removeEventListener("click", proceed);
+  window.removeEventListener("keydown", proceed);
+
   // Allow user to skip
   window.addEventListener("click", proceed);
   window.addEventListener("keydown", proceed);
