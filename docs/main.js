@@ -1,5 +1,26 @@
-// main.js
+// ------------------------------------------------------------
+// GLOBAL ERROR LOGGER — CATCHES ALL RUNTIME + PROMISE ERRORS
+// ------------------------------------------------------------
+window.addEventListener("error", e => {
+  console.error(
+    "GLOBAL ERROR:",
+    e.message,
+    "at",
+    e.filename,
+    "line",
+    e.lineno,
+    "col",
+    e.colno
+  );
+});
 
+window.addEventListener("unhandledrejection", e => {
+  console.error("UNHANDLED PROMISE:", e.reason);
+});
+
+// ------------------------------------------------------------
+// IMPORTS
+// ------------------------------------------------------------
 import { STATE, setState, onStateChange } from "./js/core/state.js";
 import { preloadAllAssets } from "./js/core/loader.js";
 
