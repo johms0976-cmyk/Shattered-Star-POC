@@ -3,19 +3,27 @@
 // ============================================================
 // GAME STATE ENUM
 // ============================================================
-// These define every major UI/gameplay mode in Shattered Star.
-// LOADING → TITLE → START → SETTINGS → NEW_GAME → ACT_INTRO → MAP → COMBAT
+// LOADING
+// → TITLE_FLYBY (Dawnseeker over Vharos)
+// → TITLE_LOOP (title slideshow)
+// → START
+// → SETTINGS
+// → NEW_GAME
+// → ACT_INTRO
+// → MAP
+// → COMBAT
 // ============================================================
 
 export const STATE = {
   LOADING: 0,
-  TITLE: 1,
-  START: 2,
-  SETTINGS: 3,
-  NEW_GAME: 4,
-  ACT_INTRO: 5,
-  MAP: 6,
-  COMBAT: 7
+  TITLE_FLYBY: 1,
+  TITLE_LOOP: 2,
+  START: 3,
+  SETTINGS: 4,
+  NEW_GAME: 5,
+  ACT_INTRO: 6,
+  MAP: 7,
+  COMBAT: 8
 };
 
 // ============================================================
@@ -52,7 +60,7 @@ export function onStateChange(callback) {
 }
 
 // ============================================================
-// GET CURRENT STATE (optional helper)
+// GET CURRENT STATE
 // ============================================================
 
 export function getState() {
