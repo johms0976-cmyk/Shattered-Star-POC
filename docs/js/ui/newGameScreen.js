@@ -11,8 +11,8 @@ export let selectedDifficulty = "normal";
 export function showNewGameScreen() {
   const screen = document.getElementById("newgame-screen");
 
-  // Apply background dynamically
-  screen.style.backgroundImage = `url(${assetPath("assets/screens/new-game/newgame1.png")})`;
+  // Corrected path (no "assets/" prefix)
+  screen.style.backgroundImage = `url(${assetPath("screens/new-game/newgame1.png")})`;
 
   // Buttons
   const heroButtons = document.querySelectorAll(".hero-select");
