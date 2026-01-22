@@ -1,4 +1,6 @@
-// js/core/loader.js
+// docs/js/core/loader.js
+
+import { assetPath } from "./path.js";
 
 // ============================================================
 // ASSET CACHE
@@ -16,16 +18,16 @@ async function loadJSON(url) {
   const promise = fetch(url)
     .then(res => {
       if (!res.ok) {
-        console.error(`JSON fetch failed: ${url}`);
+        console.error(`❌ JSON fetch failed: ${url}`);
         return {};
       }
       return res.json().catch(err => {
-        console.error(`Invalid JSON in ${url}:`, err);
+        console.error(`❌ Invalid JSON in ${url}:`, err);
         return {};
       });
     })
     .catch(err => {
-      console.error(`JSON load error: ${url}`, err);
+      console.error(`❌ JSON load error: ${url}`, err);
       return {};
     });
 
@@ -52,7 +54,7 @@ function loadImage(url) {
     };
 
     const timeout = setTimeout(() => {
-      console.warn(`Image load timeout: ${url}`);
+      console.warn(`⚠️ Image load timeout: ${url}`);
       finish();
     }, 3000);
 
@@ -63,7 +65,7 @@ function loadImage(url) {
 
     img.onerror = () => {
       clearTimeout(timeout);
-      console.error(`Failed to load image: ${url}`);
+      console.error(`❌ Failed to load image: ${url}`);
       finish();
     };
 
@@ -97,12 +99,12 @@ function loadAudio(url) {
     audio.oncanplay = finish;
 
     setTimeout(() => {
-      console.warn(`Audio load timeout: ${url}`);
+      console.warn(`⚠️ Audio load timeout: ${url}`);
       finish();
     }, 3000);
 
     audio.onerror = () => {
-      console.error(`Failed to load audio: ${url}`);
+      console.error(`❌ Failed to load audio: ${url}`);
       finish();
     };
 
@@ -124,13 +126,14 @@ async function loadAssetList(list, type, onItemLoaded) {
 
   if (!loader || !list || list.length === 0) return;
 
-  for (const url of list) {
-    console.log(`Loading ${type}:`, url);
+  for (const raw of list) {
+    const url = assetPath(raw);
+    console.log(`🔄 Loading ${type}:`, url);
 
     try {
       await loader(url);
     } catch (err) {
-      console.warn(`Error loading ${url}:`, err);
+      console.warn(`⚠️ Error loading ${url}:`, err);
     }
 
     if (onItemLoaded) onItemLoaded();
@@ -149,12 +152,13 @@ function validateManifest(manifest, act) {
 
     ["images", "audio", "data"].forEach(type => {
       const list = group[type] || [];
-      list.forEach(url => {
+      list.forEach(raw => {
+        const url = assetPath(raw);
         fetch(url, { method: "HEAD" })
           .then(res => {
-            if (!res.ok) console.warn(`Missing asset: ${url}`);
+            if (!res.ok) console.warn(`❌ Missing asset: ${url}`);
           })
-          .catch(() => console.warn(`Missing asset: ${url}`));
+          .catch(() => console.warn(`❌ Missing asset: ${url}`));
       });
     });
   }
@@ -165,7 +169,7 @@ function validateManifest(manifest, act) {
 // ============================================================
 
 export async function preloadAllAssets(onStageUpdate, onProgressUpdate, act = 1) {
-  const manifest = await loadJSON("assets/manifest.json");
+  const manifest = await loadJSON(assetPath("manifest.json"));
 
   validateManifest(manifest, act);
 
