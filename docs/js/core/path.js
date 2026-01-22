@@ -1,39 +1,11 @@
 // docs/js/core/path.js
 
-// ============================================================
-// PATH RESOLUTION FOR CURRENT GITHUB PAGES SETUP
-// ============================================================
-//
-// Your site is served from:
-//   https://johms0976-cmyk.github.io/
-//
-// Your assets live at:
-//   /assets/...
-//
-// So all asset URLs must resolve to:
-//   /assets/<relative>
-//
-// This file guarantees correct resolution everywhere.
-// ============================================================
+// Detect the base path of the GitHub Pages project.
+// Example: "/Shattered-Star-POC"
+const BASE = window.location.pathname.split("/").filter(Boolean)[0];
+const ROOT = BASE ? `/${BASE}` : "";
 
+// All assets live under: <root>/assets/
 export function assetPath(relative) {
-  return `/assets/${relative}`;
-}
-
-// Optional helpers (not required but convenient)
-
-export function imagePath(relative) {
-  return assetPath(`screens/${relative}`);
-}
-
-export function audioPath(relative) {
-  return assetPath(`audio/${relative}`);
-}
-
-export function dataPath(relative) {
-  return assetPath(`data/${relative}`);
-}
-
-export function spritePath(relative) {
-  return assetPath(`sprites/${relative}`);
+  return `${ROOT}/assets/${relative}`;
 }
