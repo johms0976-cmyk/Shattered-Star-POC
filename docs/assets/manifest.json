@@ -7,7 +7,10 @@
       "assets/screens/title/title3.png",
       "assets/screens/title/title4.png",
       "assets/screens/title/title5.png",
-
+      
+      "assets/screens/background/vharostitle.jpg",
+      "assets/sprites/ships/dawnseeker.jpg"
+      
       "assets/screens/new-game/newgame1.png",
       "assets/screens/start/startscreen1.png"
     ],
