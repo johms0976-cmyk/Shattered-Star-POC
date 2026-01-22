@@ -20,18 +20,18 @@ const GLITCH_INTERVAL = 12000;
 // Tendrils
 const ENABLE_TENDRILS = true;
 
-// Title images
+// Title images (corrected paths)
 const TITLE_IMAGES = [
-  assetPath("assets/screens/title/title1.png"),
-  assetPath("assets/screens/title/title2.png"),
-  assetPath("assets/screens/title/title3.png"),
-  assetPath("assets/screens/title/title4.png"),
-  assetPath("assets/screens/title/title5.png")
+  assetPath("screens/title/title1.png"),
+  assetPath("screens/title/title2.png"),
+  assetPath("screens/title/title3.png"),
+  assetPath("screens/title/title4.png"),
+  assetPath("screens/title/title5.png")
 ];
 
-// Flyby assets
-const FLYBY_BG = assetPath("assets/screens/background/vharostitle.png");
-const FLYBY_SHIP = assetPath("assets/sprites/ships/dawnseeker.jpg");
+// Flyby assets (corrected paths)
+const FLYBY_BG = assetPath("screens/background/vharostitle.png");
+const FLYBY_SHIP = assetPath("sprites/ships/dawnseeker.jpg");
 
 // Flyby timing
 const FLYBY_DURATION = 4500; // ms
