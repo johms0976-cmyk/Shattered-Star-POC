@@ -8,14 +8,14 @@ import { assetPath } from "../core/path.js";
 // ============================================================
 
 // Cinematic slideshow
-const IMAGE_HOLD = 3000;          // 3 seconds per image
-const FADE_TIME = 1000;           // 1 second crossfade
+const IMAGE_HOLD = 3000;
+const FADE_TIME = 1000;
 
 // Glitch burst
 const ENABLE_GLITCH = true;
 const GLITCH_FPS = 24;
 const GLITCH_FRAMES = 4;
-const GLITCH_INTERVAL = 12000;    // every 12 seconds
+const GLITCH_INTERVAL = 12000;
 
 // Tendrils
 const ENABLE_TENDRILS = true;
@@ -29,6 +29,14 @@ const TITLE_IMAGES = [
   assetPath("assets/screens/title/title5.png")
 ];
 
+// Flyby assets
+const FLYBY_BG = assetPath("assets/screens/background/vharostitle.png");
+const FLYBY_SHIP = assetPath("assets/sprites/ships/dawnseeker.jpg");
+
+// Flyby timing
+const FLYBY_DURATION = 4500; // ms
+const FLYBY_EASE = t => 1 - Math.pow(1 - t, 3); // cubic ease-out
+
 // ============================================================
 // INTERNAL STATE
 // ============================================================
@@ -41,32 +49,51 @@ let slideshowTimer = null;
 let glitchTimer = null;
 let acceptingInput = false;
 
+// Canvas for flyby
+let flyCanvas, flyCtx;
+let flybyRunning = false;
+
 // ============================================================
-// MAIN ENTRY POINT
+// PUBLIC API
 // ============================================================
 
-export function showTitle() {
+export function showTitleFlyby() {
+  setupFlybyCanvas();
+
+  const bg = new Image();
+  const ship = new Image();
+
+  let loaded = 0;
+  const done = () => {
+    loaded++;
+    if (loaded === 2) runFlyby(bg, ship);
+  };
+
+  bg.onload = done;
+  ship.onload = done;
+
+  bg.src = FLYBY_BG;
+  ship.src = FLYBY_SHIP;
+}
+
+export function showTitleLoop() {
   bgA = document.getElementById("title-bg-a");
   bgB = document.getElementById("title-bg-b");
   distortLayer = document.getElementById("title-distort");
 
-  // Create tendril layer if enabled
-  if (ENABLE_TENDRILS) {
-    setupTendrils();
-  }
+  if (ENABLE_TENDRILS) setupTendrils();
 
   currentIndex = 0;
   acceptingInput = false;
 
-  // Initial image
   const firstImage = TITLE_IMAGES[0];
   bgA.style.backgroundImage = `url(${firstImage})`;
   bgA.style.opacity = 1;
   bgB.style.opacity = 0;
 
-  // Corruption pulse classes
   bgA.classList.add("voidborn-pulse");
   bgB.classList.add("voidborn-pulse");
+
   if (distortLayer) {
     distortLayer.classList.add("voidborn-distort");
     distortLayer.style.backgroundImage = `url(${firstImage})`;
@@ -75,7 +102,6 @@ export function showTitle() {
   startSlideshow();
   startGlitchLoop();
 
-  // Slight delay before accepting input
   setTimeout(() => {
     acceptingInput = true;
     attachInputListeners();
@@ -83,33 +109,68 @@ export function showTitle() {
 }
 
 // ============================================================
-// TENDRIL SETUP
+// FLYBY IMPLEMENTATION
 // ============================================================
 
-function setupTendrils() {
-  // Remove existing layer if any
-  const existing = document.getElementById("tendril-layer");
-  if (existing && existing.parentNode) {
-    existing.parentNode.removeChild(existing);
+function setupFlybyCanvas() {
+  if (!flyCanvas) {
+    flyCanvas = document.createElement("canvas");
+    flyCanvas.id = "title-canvas";
+    flyCanvas.className = "title-canvas";
+
+    const screen = document.getElementById("title-screen");
+    screen.appendChild(flyCanvas);
+
+    flyCtx = flyCanvas.getContext("2d");
   }
 
-  tendrilLayer = document.createElement("div");
-  tendrilLayer.id = "tendril-layer";
-  tendrilLayer.className = "tendril-layer";
+  flyCanvas.width = window.innerWidth;
+  flyCanvas.height = window.innerHeight;
+}
 
-  tendrilLeft = document.createElement("div");
-  tendrilLeft.className = "tendril tendril-left tendril-animate-left";
+function runFlyby(bg, ship) {
+  flybyRunning = true;
 
-  tendrilRight = document.createElement("div");
-  tendrilRight.className = "tendril tendril-right tendril-animate-right";
+  const start = performance.now();
 
-  tendrilLayer.appendChild(tendrilLeft);
-  tendrilLayer.appendChild(tendrilRight);
+  const animate = now => {
+    if (!flybyRunning) return;
 
-  const titleScreen = document.getElementById("title-screen");
-  if (titleScreen) {
-    titleScreen.appendChild(tendrilLayer);
+    const t = Math.min((now - start) / FLYBY_DURATION, 1);
+    const eased = FLYBY_EASE(t);
+
+    flyCtx.clearRect(0, 0, flyCanvas.width, flyCanvas.height);
+
+    // Draw background
+    flyCtx.drawImage(bg, 0, 0, flyCanvas.width, flyCanvas.height);
+
+    // Ship path: left → right, slight upward arc
+    const x = -300 + eased * (flyCanvas.width + 600);
+    const y = flyCanvas.height * 0.55 - Math.sin(eased * Math.PI) * 80;
+
+    const shipW = 320;
+    const shipH = 180;
+
+    flyCtx.drawImage(ship, x, y, shipW, shipH);
+
+    if (t < 1) {
+      requestAnimationFrame(animate);
+    } else {
+      endFlyby();
+    }
+  };
+
+  requestAnimationFrame(animate);
+}
+
+function endFlyby() {
+  flybyRunning = false;
+
+  if (flyCanvas && flyCanvas.parentNode) {
+    flyCanvas.parentNode.removeChild(flyCanvas);
   }
+
+  setState(STATE.TITLE_LOOP);
 }
 
 // ============================================================
@@ -122,18 +183,15 @@ function startSlideshow() {
   slideshowTimer = setInterval(() => {
     const nextImage = TITLE_IMAGES[currentIndex];
 
-    // Fade B in with next image
     bgB.style.backgroundImage = `url(${nextImage})`;
     bgB.style.transition = `opacity ${FADE_TIME}ms ease`;
     bgB.style.opacity = 1;
 
-    // After fade, swap A to match B and hide B
     setTimeout(() => {
       bgA.style.backgroundImage = `url(${nextImage})`;
       bgA.style.opacity = 1;
       bgB.style.opacity = 0;
 
-      // Keep distortion layer in sync
       if (distortLayer) {
         distortLayer.style.backgroundImage = `url(${nextImage})`;
       }
@@ -220,10 +278,38 @@ function proceed() {
   clearInterval(glitchTimer);
   detachInputListeners();
 
-  // Clean up tendrils
   if (tendrilLayer && tendrilLayer.parentNode) {
     tendrilLayer.parentNode.removeChild(tendrilLayer);
   }
 
   setState(STATE.START);
+}
+
+// ============================================================
+// TENDRILS
+// ============================================================
+
+function setupTendrils() {
+  const existing = document.getElementById("tendril-layer");
+  if (existing && existing.parentNode) {
+    existing.parentNode.removeChild(existing);
+  }
+
+  tendrilLayer = document.createElement("div");
+  tendrilLayer.id = "tendril-layer";
+  tendrilLayer.className = "tendril-layer";
+
+  tendrilLeft = document.createElement("div");
+  tendrilLeft.className = "tendril tendril-left tendril-animate-left";
+
+  tendrilRight = document.createElement("div");
+  tendrilRight.className = "tendril tendril-right tendril-animate-right";
+
+  tendrilLayer.appendChild(tendrilLeft);
+  tendrilLayer.appendChild(tendrilRight);
+
+  const titleScreen = document.getElementById("title-screen");
+  if (titleScreen) {
+    titleScreen.appendChild(tendrilLayer);
+  }
 }
