@@ -13,12 +13,19 @@ export function showStartScreen() {
   const newGameBtn = document.getElementById("new-game");
   const settingsBtn = document.getElementById("open-settings");
 
-  newGameBtn.onclick = async () => {
+  // Remove previous listeners to avoid stacking
+  newGameBtn.replaceWith(newGameBtn.cloneNode(true));
+  settingsBtn.replaceWith(settingsBtn.cloneNode(true));
+
+  const newNewGameBtn = document.getElementById("new-game");
+  const newSettingsBtn = document.getElementById("open-settings");
+
+  newNewGameBtn.onclick = async () => {
     await fadeOutUI(600);
     setState(STATE.NEW_GAME);
   };
 
-  settingsBtn.onclick = async () => {
+  newSettingsBtn.onclick = async () => {
     await fadeOutUI(600);
     setState(STATE.SETTINGS);
   };
