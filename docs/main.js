@@ -24,7 +24,7 @@ window.addEventListener("unhandledrejection", e => {
 import { STATE, setState, onStateChange } from "./js/core/state.js";
 import { preloadAllAssets } from "./js/core/loader.js";
 
-import { showTitle } from "./js/ui/titleScreen.js";
+import { showTitleFlyby, showTitleLoop } from "./js/ui/titleScreen.js";
 import { showStartScreen } from "./js/ui/startScreen.js";
 import { showNewGameScreen } from "./js/ui/newGameScreen.js";
 import { showMapScreen } from "./js/ui/mapScreen.js";
@@ -44,9 +44,14 @@ onStateChange(newState => {
       showScreen("loading-screen");
       break;
 
-    case STATE.TITLE:
+    case STATE.TITLE_FLYBY:
       showScreen("title-screen");
-      showTitle();
+      showTitleFlyby();
+      break;
+
+    case STATE.TITLE_LOOP:
+      showScreen("title-screen");
+      showTitleLoop();
       break;
 
     case STATE.START:
@@ -95,8 +100,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     progress => updateLoadingProgress(progress)
   );
 
-  // Move to title screen
-  setState(STATE.TITLE);
+  // Move to cinematic flyby
+  setState(STATE.TITLE_FLYBY);
 });
 
 // ------------------------------------------------------------
