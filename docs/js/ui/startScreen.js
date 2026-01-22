@@ -7,25 +7,29 @@ import { assetPath } from "../core/path.js";
 export function showStartScreen() {
   const screen = document.getElementById("start-screen");
 
-  // Apply background dynamically
-  screen.style.backgroundImage = `url(${assetPath("assets/screens/start/startscreen1.png")})`;
+  // Corrected path (no "assets/" prefix)
+  screen.style.backgroundImage = `url(${assetPath("screens/start/startscreen1.png")})`;
 
   const newGameBtn = document.getElementById("new-game");
   const settingsBtn = document.getElementById("open-settings");
 
   // Remove previous listeners to avoid stacking
-  newGameBtn.replaceWith(newGameBtn.cloneNode(true));
-  settingsBtn.replaceWith(settingsBtn.cloneNode(true));
+  const newGameClone = newGameBtn.cloneNode(true);
+  const settingsClone = settingsBtn.cloneNode(true);
 
-  const newNewGameBtn = document.getElementById("new-game");
-  const newSettingsBtn = document.getElementById("open-settings");
+  newGameBtn.replaceWith(newGameClone);
+  settingsBtn.replaceWith(settingsClone);
 
-  newNewGameBtn.onclick = async () => {
+  // Re-select after cloning
+  const freshNewGameBtn = document.getElementById("new-game");
+  const freshSettingsBtn = document.getElementById("open-settings");
+
+  freshNewGameBtn.onclick = async () => {
     await fadeOutUI(600);
     setState(STATE.NEW_GAME);
   };
 
-  newSettingsBtn.onclick = async () => {
+  freshSettingsBtn.onclick = async () => {
     await fadeOutUI(600);
     setState(STATE.SETTINGS);
   };
